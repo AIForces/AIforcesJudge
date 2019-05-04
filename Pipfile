@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 flask = "*"
 gunicorn = "*"
+requests = "*"
 
 [scripts]
 s = "gunicorn -b 127.0.0.1:3001 --workers=4 app:app"

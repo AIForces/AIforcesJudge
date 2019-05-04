@@ -9,5 +9,8 @@ verify_ssl = true
 flask = "*"
 gunicorn = "*"
 
+[scripts]
+s = "gunicorn -b 127.0.0.1:3001 --workers=4 app:app"
+
 [requires]
 python_version = "3.7"

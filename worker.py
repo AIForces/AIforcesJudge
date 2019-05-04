@@ -12,4 +12,5 @@ def run(queue: mp.Queue):
         "winner": "player_1",
         "log": "smth"
     }
-    rq.post("http://localhost:3001/receive_data", json=resp)
+    data = rq.post("http://localhost:3000/judge/receive_data", json=resp)
+    print(data.content)

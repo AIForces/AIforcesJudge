@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request
+from flask import request, jsonify
 
 app = Flask('AIforcesJudge')
 
@@ -8,7 +8,7 @@ app = Flask('AIforcesJudge')
 def judge():
     data = request.get_json(force=True)
     print(data)
-    return "ok"
+    return jsonify("ok")
 
 
 

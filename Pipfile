@@ -11,7 +11,7 @@ gunicorn = "*"
 requests = "*"
 
 [scripts]
-s = "gunicorn -b 127.0.0.1:3001 --workers=4 app:app"
+s = "python main.py"
 
 [requires]
 python_version = "3.7"

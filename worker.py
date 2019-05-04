@@ -1,16 +1,23 @@
+import os
 import multiprocessing as mp
-import requests as rq
 
 
 def run(queue: mp.Queue):
-    data = queue.get()
-    print(data)
-    resp = {
-        "query_id": 6,
-        "player_1_verdict": "OK",
-        "player_2_verdict": "ML",
-        "winner": "player_1",
-        "log": "smth"
-    }
-    data = rq.post("http://localhost:3000/judge/receive_data", json=resp)
-    print(data.content)
+    pool = mp.Pool(initializer=init_process)
+    while True:
+        data = queue.get()
+        pool.apply_async(run_fight, data, callback=callback)
+
+
+def run_fight(data):
+    pass
+
+
+def callback(res):
+    pass
+
+
+def init_process():
+    path = f'tmp/{os.getpid()}'
+    os.mkdir(path)
+    os.chdir(path)

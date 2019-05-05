@@ -1,4 +1,3 @@
-import random
 import subprocess as sp
 
 from .exceptions import CompilationError, PresentationError
@@ -94,7 +93,7 @@ class BaseJudge:
 
         # FROM SANYA
         # TODO: replace with player_num = 0
-        player_num = random.choice((0, 1))
+        player_num = 0
 
         # FROM SANYA
         # while self.gameover is False?
@@ -110,7 +109,7 @@ class BaseJudge:
             # self._state is not initialized.
             # State is a py class, which can be converted to string.
             # stdin = str(self._state)?
-            player = sp.Popen(cmd, stdin=self._state, stdout=sp.PIPE, stderr=sp.DEVNULL)
+            player = sp.Popen(cmd, stdin=open('state.txt'), stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
             try:
                 output, _ = player.communicate(timeout=self._timeout)

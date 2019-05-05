@@ -43,6 +43,25 @@ class BaseJudge:
         :param file_name:
         :return:
         """
+
+        """
+        FROM SANYA:
+        Simple check of lang (if lang == "GNU G++ 17 7.3.0":)?
+        Define ONLINE_JUDGE
+
+        Langs:
+        
+        "GNU G++ 17 7.3.0"
+        Are these options useful?
+        g++.exe -static -DONLINE_JUDGE -lm -s -x c++ -Wl,--stack=268435456 -O2 -std=c++11 -D__USE_MINGW_ANSI_STDIO=0 -o {filename}.exe {file}
+        
+        "Python 3.7.3"
+
+        "JAVA XXX?" (CF: Java 1.8.0_162 Fsystem: Java 1.8)
+        Compiling java: "java.exe -Xmx512M -Xss64M -DONLINE_JUDGE=true -Duser.language=en -Duser.region=US -Duser.variant=US -jar %s"
+
+        Source: https://codeforces.com/blog/entry/79
+        """
         lang = lang.lower()
         command = ""
         if 'c++' in lang:
@@ -57,6 +76,8 @@ class BaseJudge:
 
         elif 'python' in lang:
             source_file = f"{file_name}.py"
+            # From Sanya
+            # Is it closed properly?
             open(source_file, 'w').write(source)
 
             command = ["python3", source_file]
@@ -71,18 +92,28 @@ class BaseJudge:
         # TODO: add memory check
         self._before_run()
 
+        # FROM SANYA
+        # TODO: replace with player_num = 0
         player_num = random.choice((0, 1))
+
+        # FROM SANYA
+        # while self.gameover is False?
+        # Use points => determine winner after the while loop.
+        # Error => Points = -1
         while self._winner is None:
             if player_num == 0:
                 cmd = self._cmd1
             else:
                 cmd = self._cmd2
 
+            # FROM SANYA
+            # self._state is not initialized.
+            # State is a py class, which can be converted to string.
+            # stdin = str(self._state)?
             player = sp.Popen(cmd, stdin=self._state, stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
             try:
                 output, _ = player.communicate(timeout=self._timeout)
-            # TL
             except sp.TimeoutExpired:
                 if player_num == 0:
                     self._set_result(1, 'TL')
@@ -97,6 +128,8 @@ class BaseJudge:
                     self._set_result(2, 'RE')
 
             try:
+                # From Sanya.
+                # Check for endgame here?
                 self._change_state(output)
             # PE
             except PresentationError:
@@ -107,10 +140,18 @@ class BaseJudge:
 
             # change next player
             player_num = player_num ^ 1
+        # From Sanya
+        # if points[0] > points[1]
+            # self.winner = 1
+        # else
+            # self.winner = 2
+
 
     def _set_result(self, num, res):
         if res == 'OK':
             self._winner = num
+            # FROM SANYA
+            # WTF?
             if num == 1:
                 self._result1 = 'OK'
         else:

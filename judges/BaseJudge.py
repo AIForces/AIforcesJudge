@@ -16,6 +16,7 @@ class BaseJudge:
         self._result2 = 'OK'
         self._winner = None
         self._timeout = timeout
+        self._player_num = 1
 
     def _before_run(self):
         """
@@ -93,14 +94,12 @@ class BaseJudge:
 
         # FROM SANYA
         # TODO: replace with player_num = 0
-        player_num = 0
-
         # FROM SANYA
         # while self.gameover is False?
         # Use points => determine winner after the while loop.
         # Error => Points = -1
         while self._winner is None:
-            if player_num == 0:
+            if self._player_num == 0:
                 cmd = self._cmd1
             else:
                 cmd = self._cmd2
@@ -114,14 +113,14 @@ class BaseJudge:
             try:
                 output, _ = player.communicate(timeout=self._timeout)
             except sp.TimeoutExpired:
-                if player_num == 0:
+                if self._player_num == 0:
                     self._set_result(1, 'TL')
                 else:
                     self._set_result(2, 'TL')
 
             # Check RE
             if player.returncode != 0:
-                if player_num == 0:
+                if self._player_num == 0:
                     self._set_result(1, 'RE')
                 else:
                     self._set_result(2, 'RE')
@@ -132,19 +131,17 @@ class BaseJudge:
                 self._change_state(output)
             # PE
             except PresentationError:
-                if player_num == 0:
+                if self._player_num == 0:
                     self._set_result(1, 'PE')
                 else:
                     self._set_result(2, 'PE')
 
             # change next player
-            player_num = player_num ^ 1
         # From Sanya
         # if points[0] > points[1]
             # self.winner = 1
         # else
             # self.winner = 2
-
 
     def _set_result(self, num, res):
         if res == 'OK':
@@ -160,6 +157,9 @@ class BaseJudge:
             else:
                 self._winner = 1
                 self._result2 = res
+
+    def _change_player(self):
+        pass
 
     def _change_state(self, step):
         pass

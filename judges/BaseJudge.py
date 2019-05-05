@@ -1,3 +1,4 @@
+import random
 import subprocess as sp
 
 from .exceptions import CompilationError, PresentationError
@@ -16,7 +17,6 @@ class BaseJudge:
         self._result2 = 'OK'
         self._winner = None
         self._timeout = timeout
-        self._player_num = 1
 
     def _before_run(self):
         """
@@ -88,81 +88,68 @@ class BaseJudge:
 
         return command
 
+    class State:
+        def get_start_field():
+            ans = [[0] * 5] * 5
+            ans[0][0] = 1
+            ans[-1][-1] = 2
+            return ans
+
+        def __init__(self):
+            self.current_player = 0
+            self.field = get_start_field()
+            self.gameover = 0
+            self.points = [0, 0]
+            self.verdicts = ["OK", "OK"]
+
+        def change_state(self, output):
+            if endgame == True:
+                return
+            # Change state
+
+        def get_winner(self):
+            if self.points[0] > self.points[1]:
+                return "Player 1"
+            else:
+                return "Player 2"
+
+        def change_player(self):
+            self.current_player ^= 1
+
+        # retturn input for cur player
+        def get_input(self):
+            pass
+
+        def player_error(self, error):
+            self.verdicts[self.current_player] = error
+            endgame = 1
+
+
     def run(self):
         # TODO: add memory check
         self._before_run()
 
-        # FROM SANYA
-        # TODO: replace with player_num = 0
-        # FROM SANYA
-        # while self.gameover is False?
-        # Use points => determine winner after the while loop.
-        # Error => Points = -1
-        while self._winner is None:
-            if self._player_num == 0:
-                cmd = self._cmd1
-            else:
-                cmd = self._cmd2
+        log = []
+        mystate = State()
 
-            # FROM SANYA
-            # self._state is not initialized.
-            # State is a py class, which can be converted to string.
-            # stdin = str(self._state)?
-            player = sp.Popen(cmd, stdin=open('state.txt'), stdout=sp.PIPE, stderr=sp.DEVNULL)
+        while mystate.endgame == False:
+            cur_cmd = cmd[mystate().current_player]
+            player = sp.Popen(cmd, stdin=self.mystate.get_input(), stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
             try:
                 output, _ = player.communicate(timeout=self._timeout)
             except sp.TimeoutExpired:
-                if self._player_num == 0:
-                    self._set_result(1, 'TL')
-                else:
-                    self._set_result(2, 'TL')
-
-            # Check RE
+                mystate.player_error("TL")
+            
             if player.returncode != 0:
-                if self._player_num == 0:
-                    self._set_result(1, 'RE')
-                else:
-                    self._set_result(2, 'RE')
+                mystate.player_error("RE")
 
             try:
-                # From Sanya.
-                # Check for endgame here?
-                self._change_state(output)
-            # PE
+                mystate.change_state(output)
             except PresentationError:
-                if self._player_num == 0:
-                    self._set_result(1, 'PE')
-                else:
-                    self._set_result(2, 'PE')
+                mystate.player_error("PE")
 
-            # change next player
-        # From Sanya
-        # if points[0] > points[1]
-            # self.winner = 1
-        # else
-            # self.winner = 2
+            mystate.change_player()
+            log.append(mystate)
 
-    def _set_result(self, num, res):
-        if res == 'OK':
-            self._winner = num
-            # FROM SANYA
-            # WTF?
-            if num == 1:
-                self._result1 = 'OK'
-        else:
-            if num == 1:
-                self._winner = 2
-                self._result1 = res
-            else:
-                self._winner = 1
-                self._result2 = res
-
-    def _change_player(self):
-        pass
-
-    def _change_state(self, step):
-        pass
-
-
-
+        winner = mystate.get_winner()

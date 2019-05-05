@@ -103,7 +103,7 @@ class BaseJudge:
             self.verdicts = ["OK", "OK"]
 
         def change_state(self, output):
-            if endgame == True:
+            if self.endgame == True:
                 return
             # Change state
 
@@ -116,13 +116,14 @@ class BaseJudge:
         def change_player(self):
             self.current_player ^= 1
 
-        # retturn input for cur player
+        # return input for cur player
         def get_input(self):
             pass
 
         def player_error(self, error):
             self.verdicts[self.current_player] = error
-            endgame = 1
+            self.points[self.current_player] = -1
+            self.endgame = 1
 
 
     def run(self):
@@ -134,7 +135,7 @@ class BaseJudge:
 
         while mystate.endgame == False:
             cur_cmd = cmd[mystate().current_player]
-            player = sp.Popen(cmd, stdin=self.mystate.get_input(), stdout=sp.PIPE, stderr=sp.DEVNULL)
+            player = sp.Popen(cur_cmd, stdin=self.mystate.get_input(), stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
             try:
                 output, _ = player.communicate(timeout=self._timeout)

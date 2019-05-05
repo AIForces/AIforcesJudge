@@ -3,8 +3,10 @@ import subprocess as sp
 
 from .exceptions import CompilationError, PresentationError
 
+
 class State:
-    def get_start_field():
+
+    def get_start_field(self):
         ans = [[0] * 5] * 5
         ans[0][0] = 1
         ans[-1][-1] = 2
@@ -12,7 +14,7 @@ class State:
 
     def __init__(self):
         self.current_player = 0
-        self.field = get_start_field()
+        self.field = self.get_start_field()
         self.gameover = 0
         self.points = [0, 0]
         self.verdicts = ["OK", "OK"]
@@ -39,16 +41,17 @@ class State:
         self.points[player] = -1
         self.endgame = 1
 
+
 class BaseJudge:
 
     def __init__(self, lang1: str, source1: str, lang2: str, source2: str, timeout: float):
-        self.source = [source1, source2]
-        self.lang = [lang1, lang2]
+        self._source = [source1, source2]
+        self._lang = [lang1, lang2]
         self._cmd = ['', '']
-        self.results = ['OK', 'OK']
+        self._results = ['OK', 'OK']
         self._winner = None
         self._timeout = timeout
-        self.state = State()
+        self._state = State()
 
     def _before_run(self):
         """
@@ -59,9 +62,9 @@ class BaseJudge:
         filenames = ['first', 'second']
         for player in range(2):
             try:
-                self._cmd = self._compile(lang=self.lang[player], source=source[player], file_name=filenames[player])
+                self._cmd = self._compile(lang=self._lang[player], source=self._source[player], file_name=filenames[player])
             except CompilationError:
-                self.state.player_error(player, "CE")
+                self._state.player_error(player, "CE")
 
     def _compile(self, lang: str, source: str, file_name: str) -> list:
         """
@@ -114,31 +117,31 @@ class BaseJudge:
 
         return command
 
-
     def run(self):
         # TODO: add memory check
         self._before_run()
         log = []
 
-        while self.state.endgame == False:
-            player = sp.Popen(cmd[self.state().current_player], stdin=self.state.get_input(), stdout=sp.PIPE, stderr=sp.DEVNULL)
+        while not self._state.endgame:
+            player = sp.Popen(self._cmd[self._state.current_player], stdin=self._state.get_input(), stdout=sp.PIPE,
+                              stderr=sp.DEVNULL)
             output = None
             try:
                 output, _ = player.communicate(timeout=self._timeout)
             except sp.TimeoutExpired:
-                self.state.player_error(self.state.current_player, "TL")
+                self._state.player_error(self._state.current_player, "TL")
                 continue
-            
+
             if player.returncode != 0:
-                self.state.player_error(self.state.current_player, "RE")
+                self._state.player_error(self._state.current_player, "RE")
                 continue
             try:
-                self.state.change_state(output)
+                self._state.change_state(output)
             except PresentationError:
-                self.state.player_error(self.state.current_player, "PE")
+                self._state.player_error(self._state.current_player, "PE")
                 continue
 
-            self.state.change_player()
-            log.append(self.state)
+            self._state.change_player()
+            log.append(self._state)
 
-        winner = self.state.get_winner()
+        winner = self._state.get_winner()

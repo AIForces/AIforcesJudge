@@ -1,39 +1,67 @@
+import random
 import subprocess as sp
 
 from .exceptions import CompilationError, PresentationError
 
+class State:
+    def get_start_field():
+        ans = [[0] * 5] * 5
+        ans[0][0] = 1
+        ans[-1][-1] = 2
+        return ans
+
+    def __init__(self):
+        self.current_player = 0
+        self.field = get_start_field()
+        self.gameover = 0
+        self.points = [0, 0]
+        self.verdicts = ["OK", "OK"]
+
+    def change_state(self, output):
+        pass
+        # Change state
+
+    def get_winner(self):
+        if self.points[0] > self.points[1]:
+            return "Player 1"
+        else:
+            return "Player 2"
+
+    def change_player(self):
+        self.current_player ^= 1
+
+    # return input for cur player
+    def get_input(self):
+        pass
+
+    def player_error(self, player, error):
+        self.verdicts[player] = error
+        self.points[player] = -1
+        self.endgame = 1
 
 class BaseJudge:
 
     def __init__(self, lang1: str, source1: str, lang2: str, source2: str, timeout: float):
-        self._lang1 = lang1
-        self._source1 = source1
-        self._lang2 = lang2
-        self._source2 = source2
-        self._cmd1 = None
-        self._cmd2 = None
-        self._result1 = 'OK'
-        self._result2 = 'OK'
+        self.source = [source1, source2]
+        self.lang = [lang1, lang2]
+        self._cmd = ['', '']
+        self.results = ['OK', 'OK']
         self._winner = None
         self._timeout = timeout
-        self._player_num = 1
+        self.state = State()
 
     def _before_run(self):
         """
         prepare all files, compile c++ and java, get command for running fighters
         :return:
-        """
-        try:
-            self._cmd1 = self._compile(lang=self._lang1, source=self._source1, file_name='first')
-        except CompilationError:
-            self._result1 = 'CE'
-            self._winner = 2
 
-        try:
-            self._cmd2 = self._compile(lang=self._lang2, source=self._source2, file_name='second')
-        except CompilationError:
-            self._result2 = 'CE'
-            self._winner = 1
+        """
+        filenames = ['first', 'second']
+        for player in range(2):
+            try:
+                self._cmd = self._compile(lang=self.lang[player], source=source[player], file_name=filenames[player])
+            except CompilationError:
+                self.state.player_error(player, "CE")
 
     def _compile(self, lang: str, source: str, file_name: str) -> list:
         """
@@ -76,8 +104,6 @@ class BaseJudge:
 
         elif 'python' in lang:
             source_file = f"{file_name}.py"
-            # From Sanya
-            # Is it closed properly?
             open(source_file, 'w').write(source)
 
             command = ["python3", source_file]
@@ -88,81 +114,31 @@ class BaseJudge:
 
         return command
 
+
     def run(self):
         # TODO: add memory check
         self._before_run()
+        log = []
 
-        # FROM SANYA
-        # TODO: replace with player_num = 0
-        # FROM SANYA
-        # while self.gameover is False?
-        # Use points => determine winner after the while loop.
-        # Error => Points = -1
-        while self._winner is None:
-            if self._player_num == 0:
-                cmd = self._cmd1
-            else:
-                cmd = self._cmd2
-
-            # FROM SANYA
-            # self._state is not initialized.
-            # State is a py class, which can be converted to string.
-            # stdin = str(self._state)?
-            player = sp.Popen(cmd, stdin=open('state.txt'), stdout=sp.PIPE, stderr=sp.DEVNULL)
+        while self.state.endgame == False:
+            player = sp.Popen(cmd[self.state().current_player], stdin=self.state.get_input(), stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
             try:
                 output, _ = player.communicate(timeout=self._timeout)
             except sp.TimeoutExpired:
-                if self._player_num == 0:
-                    self._set_result(1, 'TL')
-                else:
-                    self._set_result(2, 'TL')
-
-            # Check RE
+                self.state.player_error(self.state.current_player, "TL")
+                continue
+            
             if player.returncode != 0:
-                if self._player_num == 0:
-                    self._set_result(1, 'RE')
-                else:
-                    self._set_result(2, 'RE')
-
+                self.state.player_error(self.state.current_player, "RE")
+                continue
             try:
-                # From Sanya.
-                # Check for endgame here?
-                self._change_state(output)
-            # PE
+                self.state.change_state(output)
             except PresentationError:
-                if self._player_num == 0:
-                    self._set_result(1, 'PE')
-                else:
-                    self._set_result(2, 'PE')
+                self.state.player_error(self.state.current_player, "PE")
+                continue
 
-            # change next player
-        # From Sanya
-        # if points[0] > points[1]
-            # self.winner = 1
-        # else
-            # self.winner = 2
+            self.state.change_player()
+            log.append(self.state)
 
-    def _set_result(self, num, res):
-        if res == 'OK':
-            self._winner = num
-            # FROM SANYA
-            # WTF?
-            if num == 1:
-                self._result1 = 'OK'
-        else:
-            if num == 1:
-                self._winner = 2
-                self._result1 = res
-            else:
-                self._winner = 1
-                self._result2 = res
-
-    def _change_player(self):
-        pass
-
-    def _change_state(self, step):
-        pass
-
-
-
+        winner = self.state.get_winner()

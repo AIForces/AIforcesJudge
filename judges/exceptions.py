@@ -4,3 +4,7 @@ class CompilationError(Exception):
 
 class PresentationError(Exception):
     pass
+
+
+class MoveError(Exception):
+    pass

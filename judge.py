@@ -1,10 +1,11 @@
 import subprocess as sp
-from importlib import import_module
 
-from exceptions import *
+import requests
+
 import states
+import config
+from exceptions import *
 
-print(dir())
 
 
 def _get_state(game: str) -> states.BaseState:
@@ -15,13 +16,14 @@ def _get_state(game: str) -> states.BaseState:
 
 class Judge:
 
-    def __init__(self, game: str, lang1: str, source1: str, lang2: str, source2: str, timeout: float):
+    def __init__(self, game: str, lang1: str, source1: str, lang2: str, source2: str, timeout: float, query_id: int):
         self._source = [source1, source2]
         self._lang = [lang1, lang2]
         self._cmd = [[], []]
         self._results = ['OK', 'OK']
         self._winner = None
         self._timeout = timeout
+        self._query_id = query_id
         self._state = _get_state(game)
 
     def _before_run(self):
@@ -90,6 +92,10 @@ class Judge:
 
         return command
 
+    def _send_result(self):
+        #TODO: send result
+        requests.post(config.RESULT_ENDPOINT)
+
     def run(self):
         # TODO: add memory check
         self._before_run()
@@ -119,3 +125,4 @@ class Judge:
             log.append(self._state)
 
         winner = self._state.get_winner()
+        self._send_result()

@@ -1,7 +1,5 @@
 from abc import abstractmethod, ABC
 
-from exceptions import PresentationError, MoveError
-
 
 class BaseState(ABC):
     @abstractmethod
@@ -11,7 +9,7 @@ class BaseState(ABC):
     def __init__(self):
         self.current_player = 0
         self.field = self._get_start_field()
-        self.game_over = 0
+        self.game_over = False
         self.points = [0, 0]
         self.verdicts = ["OK", "OK"]
 
@@ -35,4 +33,4 @@ class BaseState(ABC):
     def player_error(self, player, error):
         self.verdicts[player] = error
         self.points[player] = -1
-        self.game_over = 1
+        self.game_over = True

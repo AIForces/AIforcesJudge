@@ -5,7 +5,7 @@ from exceptions import *
 class State(BaseState):
     def _get_start_field(self):
         w, h = 3, 3
-        return [[0 for x in range(w)] for y in range(h)]
+        return [[0 for _x in range(w)] for _y in range(h)]
 
     def __init__(self):
         super().__init__()

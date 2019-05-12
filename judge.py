@@ -1,57 +1,32 @@
-import random
+import json
 import subprocess as sp
+import requests
+from copy import deepcopy
 
-from .exceptions import CompilationError, PresentationError
+import states
+import config
 
-
-class State:
-
-    def get_start_field(self):
-        ans = [[0] * 5] * 5
-        ans[0][0] = 1
-        ans[-1][-1] = 2
-        return ans
-
-    def __init__(self):
-        self.current_player = 0
-        self.field = self.get_start_field()
-        self.gameover = 0
-        self.points = [0, 0]
-        self.verdicts = ["OK", "OK"]
-
-    def change_state(self, output):
-        pass
-        # Change state
-
-    def get_winner(self):
-        if self.points[0] > self.points[1]:
-            return "Player 1"
-        else:
-            return "Player 2"
-
-    def change_player(self):
-        self.current_player ^= 1
-
-    # return input for cur player
-    def get_input(self):
-        pass
-
-    def player_error(self, player, error):
-        self.verdicts[player] = error
-        self.points[player] = -1
-        self.endgame = 1
+from exceptions import *
 
 
-class BaseJudge:
+def _get_state(game: str) -> states.BaseState:
 
-    def __init__(self, lang1: str, source1: str, lang2: str, source2: str, timeout: float):
+    _module = getattr(states, f'{game}_state')
+    return _module.State()
+
+
+class Judge:
+
+    def __init__(self, game: str, lang1: str, source1: str, lang2: str, source2: str, timeout: float, challenge_id: int):
         self._source = [source1, source2]
         self._lang = [lang1, lang2]
-        self._cmd = ['', '']
+        self._cmd = [[], []]
         self._results = ['OK', 'OK']
         self._winner = None
         self._timeout = timeout
-        self._state = State()
+        self._challenge_id = challenge_id
+        self._state = _get_state(game)
+        self._log = []
 
     def _before_run(self):
         """
@@ -62,7 +37,9 @@ class BaseJudge:
         filenames = ['first', 'second']
         for player in range(2):
             try:
-                self._cmd = self._compile(lang=self._lang[player], source=self._source[player], file_name=filenames[player])
+                self._cmd[player] = self._compile(lang=self._lang[player],
+                                                  source=self._source[player],
+                                                  file_name=filenames[player])
             except CompilationError:
                 self._state.player_error(player, "CE")
 
@@ -117,17 +94,25 @@ class BaseJudge:
 
         return command
 
+    def _send_result(self):
+        data = {
+            "challenge_id": self._challenge_id,
+            "player_1_verdict": self._results[0],
+            "player_2_verdict": self._results[1],
+            "winner": self._winner,
+            "log": self._log
+        }
+        print(json.dumps(data))
+        requests.post(config.RESULT_ENDPOINT, data=json.dumps(data))
+
     def run(self):
         # TODO: add memory check
         self._before_run()
-        log = []
-
-        while not self._state.endgame:
-            player = sp.Popen(self._cmd[self._state.current_player], stdin=self._state.get_input(), stdout=sp.PIPE,
-                              stderr=sp.DEVNULL)
+        while not self._state.game_over:
+            player = sp.Popen(self._cmd[self._state.current_player], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
             try:
-                output, _ = player.communicate(timeout=self._timeout)
+                output, _ = player.communicate(input=str.encode(self._state.get_input()), timeout=self._timeout)
             except sp.TimeoutExpired:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
@@ -142,6 +127,7 @@ class BaseJudge:
                 continue
 
             self._state.change_player()
-            log.append(self._state)
+            self._log.append(deepcopy(self._state.get_log()))
 
-        winner = self._state.get_winner()
+        self._winner = self._state.get_winner()
+        self._send_result()

@@ -1,3 +1,4 @@
+import json
 import subprocess as sp
 
 import requests
@@ -93,8 +94,15 @@ class Judge:
         return command
 
     def _send_result(self):
-        #TODO: send result
-        requests.post(config.RESULT_ENDPOINT)
+        # TODO: wtf where is log?
+        data = {
+            "query_id": self._query_id,
+            "player_1_verdict": self._results[0],
+            "player_2_verdict": self._results[1],
+            "winner": self._winner,
+            "log": self._state.field
+        }
+        requests.post(config.RESULT_ENDPOINT, data=json.dumps(data))
 
     def run(self):
         # TODO: add memory check

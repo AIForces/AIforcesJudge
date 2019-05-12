@@ -57,3 +57,12 @@ class State(BaseState):
                 for j in range(3):
                     ans[i][j] = rev[self.field[i][j]]
         return '\n'.join([' '.join(str(y) for y in x) for x in ans])
+
+    def get_log(self):
+        return {
+            "field": self.field,
+            "current_player": self.current_player,
+            "game_over": self.game_over,
+            "points": self.points,
+            "verdicts": self.verdicts,
+        }

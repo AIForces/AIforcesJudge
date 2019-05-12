@@ -30,6 +30,10 @@ class BaseState(ABC):
     def get_input(self):
         pass
 
+    @abstractmethod
+    def get_log(self):
+        pass
+
     def player_error(self, player, error):
         self.verdicts[player] = error
         self.points[player] = -1

@@ -25,6 +25,7 @@ class Judge:
         self._timeout = timeout
         self._query_id = query_id
         self._state = _get_state(game)
+        self._log = []
 
     def _before_run(self):
         """
@@ -93,20 +94,18 @@ class Judge:
         return command
 
     def _send_result(self):
-        # TODO: wtf where is log?
         data = {
             "query_id": self._query_id,
             "player_1_verdict": self._results[0],
             "player_2_verdict": self._results[1],
             "winner": self._winner,
-            "log": self._state.field
+            "log": self._log
         }
         requests.post(config.RESULT_ENDPOINT, data=json.dumps(data))
 
     def run(self):
         # TODO: add memory check
         self._before_run()
-        log = []
         while not self._state.game_over:
             player = sp.Popen(self._cmd[self._state.current_player], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
@@ -129,7 +128,7 @@ class Judge:
                 continue
 
             self._state.change_player()
-            log.append(self._state)
+            self._log.append(self._state.get_input())
 
-        winner = self._state.get_winner()
+        self._winner = self._state.get_winner()
         self._send_result()

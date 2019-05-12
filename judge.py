@@ -8,7 +8,6 @@ import config
 from exceptions import *
 
 
-
 def _get_state(game: str) -> states.BaseState:
 
     _module = getattr(states, f'{game}_state')

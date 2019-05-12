@@ -1,10 +1,11 @@
 import json
 import subprocess as sp
-
 import requests
+from copy import deepcopy
 
 import states
 import config
+
 from exceptions import *
 
 
@@ -16,15 +17,16 @@ def _get_state(game: str) -> states.BaseState:
 
 class Judge:
 
-    def __init__(self, game: str, lang1: str, source1: str, lang2: str, source2: str, timeout: float, query_id: int):
+    def __init__(self, game: str, lang1: str, source1: str, lang2: str, source2: str, timeout: float, challenge_id: int):
         self._source = [source1, source2]
         self._lang = [lang1, lang2]
         self._cmd = [[], []]
         self._results = ['OK', 'OK']
         self._winner = None
         self._timeout = timeout
-        self._query_id = query_id
+        self._challenge_id = challenge_id
         self._state = _get_state(game)
+        self._log = []
 
     def _before_run(self):
         """
@@ -93,20 +95,19 @@ class Judge:
         return command
 
     def _send_result(self):
-        # TODO: wtf where is log?
         data = {
-            "query_id": self._query_id,
+            "challenge_id": self._challenge_id,
             "player_1_verdict": self._results[0],
             "player_2_verdict": self._results[1],
             "winner": self._winner,
-            "log": self._state.field
+            "log": self._log
         }
+        print(json.dumps(data))
         requests.post(config.RESULT_ENDPOINT, data=json.dumps(data))
 
     def run(self):
         # TODO: add memory check
         self._before_run()
-        log = []
         while not self._state.game_over:
             player = sp.Popen(self._cmd[self._state.current_player], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL)
             output = None
@@ -115,9 +116,6 @@ class Judge:
             except sp.TimeoutExpired:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
-
-            print(self._state.get_input())
-            print(output)
 
             if player.returncode != 0:
                 self._state.player_error(self._state.current_player, "RE")
@@ -129,7 +127,7 @@ class Judge:
                 continue
 
             self._state.change_player()
-            log.append(self._state)
+            self._log.append(deepcopy(self._state.get_log()))
 
-        winner = self._state.get_winner()
+        self._winner = self._state.get_winner()
         self._send_result()

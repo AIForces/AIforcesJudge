@@ -8,7 +8,6 @@ class BaseState(ABC):
 
     def __init__(self):
         self.current_player = 0
-        self.field = self._get_start_field()
         self.game_over = False
         self.points = [0, 0]
         self.verdicts = ["OK", "OK"]

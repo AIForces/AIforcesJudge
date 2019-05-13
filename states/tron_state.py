@@ -28,11 +28,10 @@ class State(BaseState):
             [0, 0, -1, 1],
             [-1, 1, 0, 0]
         ]
+        self.alive = [True, True]
 
-    def find_me(self):
-        pointer_id = 1 if self.current_player == 0 else 3
-        print("pointer_id")
-        print(pointer_id)
+    def find_me(self, player):
+        pointer_id = 1 if player == 0 else 3
         for i, row in enumerate(self.field):
             try:
                 j = row.index(pointer_id)
@@ -52,6 +51,15 @@ class State(BaseState):
         else:
             return 0
 
+    def update_alive(self):
+        for player in range(2):
+            my_position = self.find_me(player)
+            self.alive[player] = False
+            for move_id in range(4):
+                next_position = [my_position[i] + self.delta[i][move_id] for i in range(2)]
+                if not self.check_bound(next_position):
+                    self.alive[player] |= not self.check_empty(next_position)
+
     def change_state(self, output):
         try:
             move = output.split()[0]
@@ -62,7 +70,7 @@ class State(BaseState):
         except ValueError:
             raise PresentationError
 
-        my_position = self.find_me()
+        my_position = self.find_me(self.current_player)
         next_position = [my_position[i] + self.delta[i][move_id] for i in range(2)]
         if self.check_bound(next_position):
             raise MoveError
@@ -73,17 +81,12 @@ class State(BaseState):
         self.field[next_position[0]][next_position[1]] = pointer_id
         self.field[my_position[0]][my_position[1]] = trailing_id
         self.points[self.current_player] += 1
+
+        self.update_alive()
         self.check_endgame()
 
     def check_endgame(self):
-        my_position = self.find_me()
-        ok = 0
-        for move_id in range(4):
-            next_position = [my_position[i] + self.delta[i][move_id] for i in range(2)]
-            if not self.check_bound(next_position):
-                ok |= not self.check_empty(next_position)
-
-        self.game_over |= not ok
+        self.game_over = self.alive == [False, False]
 
     def get_input(self):
         ans = ''
@@ -109,6 +112,6 @@ class State(BaseState):
         }
 
     def change_player(self):
-        self.current_player ^= 1
+        if self.alive[self.current_player ^ 1]:
+            self.current_player ^= 1
         self.number_of_move += 1
-        self.check_endgame()

@@ -31,6 +31,8 @@ class State(BaseState):
 
     def find_me(self):
         pointer_id = 1 if self.current_player == 0 else 3
+        print("pointer_id")
+        print(pointer_id)
         for i, row in enumerate(self.field):
             try:
                 j = row.index(pointer_id)
@@ -79,9 +81,7 @@ class State(BaseState):
         for move_id in range(4):
             next_position = [my_position[i] + self.delta[i][move_id] for i in range(2)]
             if not self.check_bound(next_position):
-                ok |= self.check_empty(next_position)
-            else:
-                ok = 1
+                ok |= not self.check_empty(next_position)
 
         self.game_over |= not ok
 

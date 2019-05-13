@@ -98,13 +98,12 @@ class Judge:
     def _send_result(self):
         data = {
             "challenge_id": self._challenge_id,
-            "player_1_verdict": self._results[0],
-            "player_2_verdict": self._results[1],
+            "player1_verdict": self._results[0],
+            "player2_verdict": self._results[1],
             "winner": self._winner,
             "log": self._log
         }
-        print(json.dumps(data))
-        requests.post(config.RESULT_ENDPOINT, data=json.dumps(data))
+        requests.post(config.RESULT_ENDPOINT, json=data)
 
     def run(self):
         # TODO: add memory check

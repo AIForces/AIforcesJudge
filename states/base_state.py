@@ -18,9 +18,11 @@ class BaseState(ABC):
 
     def get_winner(self):
         if self.points[0] > self.points[1]:
-            return "Player 1"
+            return 0
+        elif self.points[0] < self.points[1]:
+            return 1
         else:
-            return "Player 2"
+            return -1
 
     def change_player(self):
         self.current_player ^= 1

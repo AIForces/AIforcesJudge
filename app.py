@@ -13,8 +13,12 @@ def judge():
     """
     data: dict = flask.request.get_json(force=True)
 
-    app.mp_queue.put(data)
+    # Hujak-hujak i odin thread
+    from judge import Judge
+    Judge(data["game"], data["lang1"], data["source1"], data["lang2"], data["source2"], 0.5, data["challenge_id"]).run()
+    # app.mp_queue.put(data)
     return "", 200
+
 
 
 

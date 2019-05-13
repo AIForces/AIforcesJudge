@@ -20,6 +20,13 @@ def startup():
     os.mkdir('tmp')
 
 
+def solve(queue):
+    while True:
+        data = queue.get()
+        from judge import Judge
+        Judge(data["game"], data["lang1"], data["source1"], data["lang2"], data["source2"], 0.5, data["challenge_id"]).run()
+
+
 def main():
     """
     Fork master process and start flask server in current process and pool of workers
@@ -32,7 +39,7 @@ def main():
         app.mp_queue = queue
         app.run(host=config.IP, port=config.PORT, debug=config.DEBUG)
     else:
-        worker.run(queue)
+        solve(queue)
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ class State(BaseState):
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 2]
+            [0, 0, 0, 0, 0, 0, 3]
         ]
 
     def __init__(self):
@@ -25,14 +25,15 @@ class State(BaseState):
         self.points = [1, 1]
         self.possible_moves = ['L', 'R', 'U', 'D']
         self.delta = [
-            [-1, 1, 0, 0],
-            [0, 0, 1, -1]
+            [0, 0, -1, 1],
+            [-1, 1, 0, 0]
         ]
 
     def find_me(self):
+        pointer_id = 1 if self.current_player == 0 else 3
         for i, row in enumerate(self.field):
             try:
-                j = row.index(self.current_player + 1)
+                j = row.index(pointer_id)
                 return i, j
             except ValueError:
                 pass
@@ -60,7 +61,7 @@ class State(BaseState):
             raise PresentationError
 
         my_position = self.find_me()
-        next_position = [my_position[i] + self.delta[move_id][i] for i in range(2)]
+        next_position = [my_position[i] + self.delta[i][move_id] for i in range(2)]
         if self.check_bound(next_position):
             raise MoveError
         if self.check_empty(next_position):
@@ -76,8 +77,12 @@ class State(BaseState):
         my_position = self.find_me()
         ok = 0
         for move_id in range(4):
-            next_position = [my_position[i] + self.delta[move_id][i] for i in range(2)]
-            ok |= not self.check_bound(next_position) or not self.check_empty(next_position)
+            next_position = [my_position[i] + self.delta[i][move_id] for i in range(2)]
+            if not self.check_bound(next_position):
+                ok |= self.check_empty(next_position)
+            else:
+                ok = 1
+
         self.game_over |= not ok
 
     def get_input(self):
@@ -85,7 +90,13 @@ class State(BaseState):
         if self.number_of_move < 2:
             ans += "{}\n".format(self.field_id)
         ans += "{} {}\n".format(self.size[0], self.size[1])
-        ans += '\n'.join([' '.join(str(y) for y in x) for x in ans])
+
+        cur_field = self.field
+        if self.current_player == 1:
+            reverse = [0, 3, 4, 1, 2, 5, 6, 7, 8]
+            cur_field = [[reverse[x] for x in row] for row in self.field]
+        ans += '\n'.join([' '.join(str(y) for y in x) for x in cur_field])
+        ans += '\n'
         return ans
 
     def get_log(self):
@@ -99,5 +110,5 @@ class State(BaseState):
 
     def change_player(self):
         self.current_player ^= 1
+        self.number_of_move += 1
         self.check_endgame()
-

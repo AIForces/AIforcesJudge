@@ -2,6 +2,7 @@ import json
 import subprocess as sp
 import requests
 from copy import deepcopy
+import time
 
 import states
 import config
@@ -108,26 +109,36 @@ class Judge:
     def run(self):
         # TODO: add memory check
         self._before_run()
+        players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
+                            universal_newlines=True) for i in range(2)]
+        self._log.append(deepcopy(self._state.get_log()))
         while not self._state.game_over:
-            player = sp.Popen(self._cmd[self._state.current_player], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL)
-            output = None
+            player = players[self._state.current_player]
+            if player.poll() is not None:
+                self._state.player_error(self._state.current_player, "RE")
+                continue
             try:
-                output, _ = player.communicate(input=str.encode(self._state.get_input()), timeout=self._timeout)
+                # TODO: Write good TL management
+                print(self._state.get_input())
+                player.stdin.write(self._state.get_input())
+                # Investigate shit. WTF newline?
+                player.stdin.flush()
+                time.sleep(self._timeout)
+                output = player.stdout.readline()
+                print(output)
             except sp.TimeoutExpired:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
 
-            if player.returncode != 0:
-                self._state.player_error(self._state.current_player, "RE")
-                continue
             try:
                 self._state.change_state(output)
             except PresentationError:
                 self._state.player_error(self._state.current_player, "PE")
                 continue
 
-            self._state.change_player()
             self._log.append(deepcopy(self._state.get_log()))
+            self._state.change_player()
 
+        self._log.append(deepcopy(self._state.get_log()))
         self._winner = self._state.get_winner()
         self._send_result()

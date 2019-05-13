@@ -1,5 +1,5 @@
 import os
-
+import json
 import flask
 
 app = flask.Flask('AIforcesJudge')
@@ -12,10 +12,11 @@ def judge():
     :return:
     """
     data: dict = flask.request.get_json(force=True)
+    print(json.dumps(data))
 
     # Hujak-hujak i odin thread
-    from judge import Judge
-    Judge(data["game"], data["lang1"], data["source1"], data["lang2"], data["source2"], 0.5, data["challenge_id"]).run()
+    # from judge import Judge
+    # Judge(data["game"], data["lang1"], data["source1"], data["lang2"], data["source2"], 0.5, data["challenge_id"]).run()
     # app.mp_queue.put(data)
     return "", 200
 

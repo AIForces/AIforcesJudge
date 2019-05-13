@@ -112,15 +112,17 @@ class Judge:
                             universal_newlines=True) for i in range(2)]
         self._log.append(deepcopy(self._state.get_log()))
         while not self._state.game_over:
+            print(f"move by {self._state.current_player}")
             player = players[self._state.current_player]
             if player.poll() is not None:
+                print("dead one")
                 self._state.player_error(self._state.current_player, "RE")
                 continue
             try:
                 # TODO: Write good TL management
+                print("communcating")
                 print(self._state.get_input())
                 player.stdin.write(self._state.get_input())
-                # Investigate shit. WTF newline?
                 player.stdin.flush()
                 time.sleep(self._timeout)
                 output = player.stdout.readline()
@@ -130,8 +132,10 @@ class Judge:
                 continue
 
             try:
+                print("changing output")
                 self._state.change_state(output)
             except PresentationError:
+                print("PE")
                 self._state.player_error(self._state.current_player, "PE")
                 continue
 

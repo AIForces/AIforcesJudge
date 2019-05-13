@@ -6,6 +6,7 @@ def run(queue: mp.Queue):
     pool = mp.Pool(initializer=init_process)
     while True:
         data = queue.get()
+        send_data(Judge(data).run())
         pool.apply_async(run_fight, data, callback=callback)
 
 

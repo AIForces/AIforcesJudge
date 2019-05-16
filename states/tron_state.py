@@ -155,7 +155,8 @@ class State(BaseState):
                 move = move_enum.value
                 next_position = [my_position[i] + move.delta[i] for i in range(2)]
                 if not self.check_bound(next_position):
-                    self.alive[player] |= not self.check_empty(next_position)
+                    if not self.check_empty(next_position):
+                        self.alive[player] = True
 
     def change_state(self, output):
         try:
@@ -188,7 +189,10 @@ class State(BaseState):
         self.check_endgame()
 
     def check_endgame(self):
-        self.game_over = self.alive == [False, False]
+        self.game_over = self.alive == {
+            Players.RED: False,
+            Players.BLUE: False
+        }
 
     def get_input(self):
         ans = ''
@@ -196,7 +200,7 @@ class State(BaseState):
             ans += "{}\n".format(self.current_player.name)
             ans += "{}\n".format(self.level)
             ans += "{} {}\n".format(self.size[0], self.size[1])
-        cur_board = [[j.value[1] for j in i]for i in self.board]
+        cur_board = [[j.value[1] for j in i] for i in self.board]
 
         ans += '\n'.join([' '.join(str(y) for y in x) for x in cur_board])
         ans += '\n'

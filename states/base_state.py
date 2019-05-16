@@ -28,7 +28,7 @@ class BaseState(ABC):
     def get_winner(self):
         if self.points[Players.RED] > self.points[Players.BLUE]:
             return 0
-        elif self.points[Players.BLUE] < self.points[Players.RED]:
+        elif self.points[Players.RED] < self.points[Players.BLUE]:
             return 1
         else:
             return -1

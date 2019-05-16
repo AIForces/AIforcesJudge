@@ -121,15 +121,18 @@ class Judge:
                 player.stdin.flush()
                 time.sleep(self._timeout)
                 output = player.stdout.readline()
-                print(output)
             except sp.TimeoutExpired:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
 
             try:
-                self._state.change_state(output)
-            except PresentationError:
-                self._state.player_error(self._state.current_player, "PE")
+                try:
+                    self._state.change_state(output)
+                except PresentationError:
+                    self._state.player_error(self._state.current_player, "PE")
+                    continue
+            except MoveError:
+                self._state.player_error(self._state.current_player, "ME")
                 continue
 
             self._log.append(deepcopy(self._state.get_log()))

@@ -16,6 +16,3 @@ def judge():
     app.mp_queue.put(data)
     return "", 200
 
-
-
-

@@ -22,8 +22,6 @@ class Judge:
         self._source = [source1, source2]
         self._lang = [lang1, lang2]
         self._cmd = [[], []]
-        self._results = ['OK', 'OK']
-        self._winner = None
         self._timeout = timeout
         self._challenge_id = challenge_id
         self._state = _get_state(game)
@@ -98,9 +96,8 @@ class Judge:
     def _send_result(self):
         data = {
             "challenge_id": self._challenge_id,
-            "player1_verdict": self._results[0],
-            "player2_verdict": self._results[1],
-            "winner": self._winner,
+            "verdicts": self._state.get_verdicts(),
+            "winner": self._state.get_winner(),
             "log": self._log
         }
         requests.post(config.RESULT_ENDPOINT, json=data)
@@ -112,9 +109,9 @@ class Judge:
                             universal_newlines=True) for i in range(2)]
         self._log.append(deepcopy(self._state.get_log()))
         while not self._state.game_over:
-            player = players[self._state.current_player]
+            player = players[self._state.current_player.value]
             if player.poll() is not None:
-                self._state.player_error(self._state.current_player, "RE")
+                self._state.player_error(self._state.current_player.value, "RE")
                 continue
             try:
                 # TODO: Write good TL management
@@ -139,5 +136,4 @@ class Judge:
             self._state.change_player()
 
         self._log.append(deepcopy(self._state.get_log()))
-        self._winner = self._state.get_winner()
         self._send_result()

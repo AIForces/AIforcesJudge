@@ -1,12 +1,12 @@
-import json
+import multiprocessing
 import subprocess as sp
-import requests
-from copy import deepcopy
 import time
+from copy import deepcopy
 
-import states
+import requests
+
 import config
-
+import states
 from exceptions import *
 
 
@@ -108,6 +108,7 @@ class Judge:
         players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
                             universal_newlines=True) for i in range(2)]
         self._log.append(deepcopy(self._state.get_log()))
+        print(f"starting challenge №{self._challenge_id}")
         while not self._state.game_over:
             player = players[self._state.current_player.value]
             if player.poll() is not None:
@@ -140,3 +141,4 @@ class Judge:
 
         self._log.append(deepcopy(self._state.get_log()))
         self._send_result()
+        print('done')

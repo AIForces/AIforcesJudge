@@ -1,6 +1,9 @@
+import atexit
 import multiprocessing
+import logging
 import os
 import shutil
+import sys
 
 import flask
 
@@ -19,12 +22,23 @@ def startup():
 
     os.mkdir('tmp')
 
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
 
-def solve(queue):
-    while True:
-        data = queue.get()
-        from judge import Judge
-        Judge(data["game"], data["lang1"], data["source1"], data["lang2"], data["source2"], 0.5, data["challenge_id"]).run()
+
+def shutdown():
+    print('at exit')
+    app.mp_queue.put('die')
+
+
+def setup_logger():
+    logger = multiprocessing.get_logger()
+    handler = logging.FileHandler('logs/judges.log')
+    fmt = logging.Formatter("[%(asctime)s |%(levelname)s]: %(message)s")
+    handler.setFormatter(fmt)
+    handler.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
+    return logger
 
 
 def main():
@@ -33,13 +47,17 @@ def main():
     :return:
     """
     startup()
+    logger = setup_logger()
+    logger.info(f'Pid: {os.getpid()}')
     queue = multiprocessing.Queue()
     pid = os.fork()
-    if pid != 0:
+    if pid == 0:
+        sys.stdout = sys.stderr = open('logs/flask.log', 'a')
         app.mp_queue = queue
-        app.run(host=config.IP, port=config.PORT, debug=config.DEBUG)
+        atexit.register(shutdown)
+        app.run(host=config.IP, port=config.PORT, debug=False)
     else:
-        solve(queue)
+        worker.run(queue)
 
 
 if __name__ == '__main__':

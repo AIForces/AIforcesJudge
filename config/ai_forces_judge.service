@@ -1,0 +1,15 @@
+[Unit]
+Description=Ai forces judge
+After=nginx.service
+
+[Service]
+Type=forking
+PIDFile=/run/aiforcesjudge.pid
+WorkingDirectory=/home/aiforces/AIforcesJudge
+User=aiforces
+Group=aiforces
+
+ExecStart=/usr/local/bin/pipenv run s
+
+[Install]
+WantedBy=multi-user.target

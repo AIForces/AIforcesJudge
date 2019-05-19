@@ -51,7 +51,6 @@ def main():
     queue = multiprocessing.Queue()
     pid = os.fork()
     if pid == 0:
-        sys.stdout = sys.stderr = open('logs/flask.log', 'a')
         app.mp_queue = queue
         atexit.register(shutdown)
         app.run(host=config.IP, port=config.PORT, debug=False)

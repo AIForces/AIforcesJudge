@@ -10,6 +10,7 @@ User=aiforces
 Group=aiforces
 
 ExecStart=/usr/local/bin/pipenv run s
+TimeoutSec=5
 
 [Install]
 WantedBy=multi-user.target

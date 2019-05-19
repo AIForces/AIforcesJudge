@@ -2,6 +2,7 @@ import multiprocessing
 import subprocess as sp
 import time
 from copy import deepcopy
+from states.base_state import *
 
 import requests
 
@@ -40,7 +41,8 @@ class Judge:
                                                   source=self._source[player],
                                                   file_name=filenames[player])
             except CompilationError:
-                self._state.player_error(player, "CE")
+                player_enum = Players.RED if player == 0 else Players.BLUE
+                self._state.player_error(player_enum, "CE")
 
     def _compile(self, lang: str, source: str, file_name: str) -> list:
         """
@@ -74,7 +76,6 @@ class Judge:
         if 'c++' in lang:
             source_file = f"{file_name}.cpp"
             open(source_file, 'w').write(source)
-
             code = sp.call(['g++', '-std=c++17', '-O2', '-o', file_name, source_file])
             if code != 0:
                 raise CompilationError
@@ -105,11 +106,13 @@ class Judge:
     def run(self):
         # TODO: add memory check
         self._before_run()
-        players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
-                            universal_newlines=True) for i in range(2)]
-        self._log.append(deepcopy(self._state.get_log()))
-        print(f"starting challenge #{self._challenge_id}")
-        steps = 1
+
+        if not self._state.game_over:
+            players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
+                                universal_newlines=True) for i in range(2)]
+            self._log.append(deepcopy(self._state.get_log()))
+            print(f"starting challenge #{self._challenge_id}")
+            steps = 1
         while not self._state.game_over:
             print(f'# {self._challenge_id} step {steps}')
             player = players[self._state.current_player.value]

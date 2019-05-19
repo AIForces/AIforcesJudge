@@ -47,8 +47,7 @@ def main():
     :return:
     """
     startup()
-    logger = setup_logger()
-    logger.info(f'Pid: {os.getpid()}')
+    print(f'Pid: {os.getpid()}')
     queue = multiprocessing.Queue()
     pid = os.fork()
     if pid == 0:

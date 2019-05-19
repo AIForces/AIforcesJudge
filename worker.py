@@ -8,7 +8,7 @@ from judge import Judge
 def run(queue: mp.Queue):
     logger = mp.get_logger()
     pool = mp.Pool(initializer=init_process)
-    logger.info("Starting process poll...")
+    print("Starting process poll...")
     while True:
         data = queue.get()
         if isinstance(data, str) and data == 'die':
@@ -35,7 +35,7 @@ def run_fight(data, *args, **kwargs):
 
 
 def err_callback(exc):
-    print(exc)
+    print(f'ERROR at Judge \n{exc}')
     # TODO: implement errors check
     pass
 
@@ -54,4 +54,4 @@ def init_process():
     if not os.path.exists(path):
         os.mkdir(path)
     os.chdir(path)
-    mp.get_logger().info(f"init new worker {os.getpid()}")
+    print(f"init new worker {os.getpid()}")

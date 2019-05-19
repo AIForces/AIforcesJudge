@@ -108,15 +108,17 @@ class Judge:
         players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
                             universal_newlines=True) for i in range(2)]
         self._log.append(deepcopy(self._state.get_log()))
-        print(f"starting challenge №{self._challenge_id}")
+        print(f"starting challenge #{self._challenge_id}")
+        steps = 1
         while not self._state.game_over:
+            print(f'# {self._challenge_id} step {steps}')
             player = players[self._state.current_player.value]
             if player.poll() is not None:
                 self._state.player_error(self._state.current_player.value, "RE")
                 continue
             try:
                 # TODO: Write good TL management
-                print(self._state.get_input())
+                # print(self._state.get_input())
                 player.stdin.write(self._state.get_input())
                 # Investigate shit. WTF newline?
                 player.stdin.flush()
@@ -138,6 +140,7 @@ class Judge:
 
             self._log.append(deepcopy(self._state.get_log()))
             self._state.change_player()
+            steps += 1
 
         self._log.append(deepcopy(self._state.get_log()))
         self._send_result()

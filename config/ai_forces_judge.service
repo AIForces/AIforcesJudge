@@ -6,6 +6,11 @@ After=nginx.service
 Type=forking
 PIDFile=/run/aiforcesjudge.pid
 WorkingDirectory=/home/aiforces/AIforcesJudge
+
+StandartInput=null
+StandartOutput=syslog
+StandardError=syslog
+
 User=aiforces
 Group=aiforces
 

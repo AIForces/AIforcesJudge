@@ -27,7 +27,7 @@ def run_fight(data, *args, **kwargs):
         source1=data['source1'],
         lang2=data['lang2'],
         source2=data['source2'],
-        timeout=2,
+        timeout=0.2,
         challenge_id=data['challenge_id']
     )
 

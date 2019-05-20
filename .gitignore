@@ -3,7 +3,7 @@ tmp
 .DS_Store
 *.pyc
 *.log
-__pycache__
+*/__pycache__/*
 tests/JudgeTesting/tron_tests/*
 tests/JudgeTesting/tron_tests/tron_tester.py
 tests/JudgeTesting/tron_tests/player.cpp

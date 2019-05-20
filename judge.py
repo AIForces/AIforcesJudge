@@ -19,9 +19,9 @@ def _get_state(game: str) -> states.BaseState:
 
 class Judge:
 
-    def __init__(self, game: str, lang1: str, source1: str, lang2: str, source2: str, timeout: float, challenge_id: int):
-        self._source = [source1, source2]
-        self._lang = [lang1, lang2]
+    def __init__(self, game: str, lang: list, source: list, timeout: float, challenge_id: int):
+        self._source = source
+        self._lang = lang
         self._cmd = [[], []]
         self._timeout = timeout
         self._challenge_id = challenge_id
@@ -121,7 +121,6 @@ class Judge:
                 continue
             try:
                 # TODO: Write good TL management
-                # print(self._state.get_input())
                 player.stdin.write(self._state.get_input())
                 # Investigate shit. WTF newline?
                 player.stdin.flush()

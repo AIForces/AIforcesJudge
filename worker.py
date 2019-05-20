@@ -23,11 +23,9 @@ def run_fight(data, *args, **kwargs):
     # TODO: timeout from request
     j = Judge(
         game=data['game'],
-        lang1=data['lang1'],
-        source1=data['source1'],
-        lang2=data['lang2'],
-        source2=data['source2'],
-        timeout=0.2,
+        lang=data['lang'],
+        source=data['source'],
+        timeout=data['timeout'],
         challenge_id=data['challenge_id']
     )
 

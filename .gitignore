@@ -4,3 +4,7 @@ tmp
 *.pyc
 *.log
 __pycache__
+tests/tron_tests/*
+!tests/tron_tests/tron_tester.py
+!tests/tron_tests/player.cpp
+!tests/tron_tests/player.py

@@ -5,6 +5,6 @@ tmp
 *.log
 */__pycache__/*
 tests/JudgeTesting/tron_tests/*
-tests/JudgeTesting/tron_tests/tron_tester.py
-tests/JudgeTesting/tron_tests/player.cpp
-tests/JudgeTesting/tron_tests/player.py
+!tests/JudgeTesting/tron_tests/tron_tester.py
+!tests/JudgeTesting/tron_tests/player.cpp
+!tests/JudgeTesting/tron_tests/player.py

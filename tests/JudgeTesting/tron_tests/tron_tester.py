@@ -1,6 +1,12 @@
 from judge import Judge
 
+
+def test_tron(source, lang):
+    j = Judge("tron", lang, source, 0.5, 0)
+    j.run()
+
+
 if __name__ == '__main__':
-    source = open("player.cpp").read()
-    jdg = Judge("tron", "c++", source, "c++", source, 0.5, 0)
-    jdg.run()
+    cpp_source = open("player.cpp").read()
+    py_source = open("player.py").read()
+    test_tron([cpp_source, py_source], ["c++", "python"])

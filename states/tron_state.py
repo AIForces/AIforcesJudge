@@ -104,10 +104,10 @@ class State(BaseState):
                 return move
         raise ValueError
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, state_par):
+        super().__init__(state_par)
         self.level = 1
-        self.board = State.get_start_board(1)
+        self.board = State.get_start_board(state_par["level"])
         self.size = [len(self.board), len(self.board[0])]
         self.number_of_move = 0
         self.active_power_ups = []

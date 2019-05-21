@@ -14,18 +14,18 @@ from exceptions import *
 def _get_state(game: str) -> states.BaseState:
 
     _module = getattr(states, f'{game}_state')
-    return _module.State()
+    return _module.State
 
 
 class Judge:
 
-    def __init__(self, game: str, lang: list, source: list, timeout: float, challenge_id: int):
+    def __init__(self, game: str, lang: list, source: list, timeout: float, challenge_id: int, state_par):
         self._source = source
         self._lang = lang
         self._cmd = [[], []]
         self._timeout = timeout
         self._challenge_id = challenge_id
-        self._state = _get_state(game)
+        self._state = _get_state(game)(state_par)
         self._log = []
 
     def _before_run(self):

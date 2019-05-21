@@ -21,12 +21,14 @@ def run(queue: mp.Queue):
 def run_fight(data, *args, **kwargs):
 
     # TODO: timeout from request
+
     j = Judge(
         game=data['game'],
         lang=data['lang'],
         source=data['source'],
         timeout=data['timeout'],
-        challenge_id=data['challenge_id']
+        challenge_id=data['challenge_id'],
+        state_par=data['state_par']
     )
 
     j.run()

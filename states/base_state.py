@@ -9,7 +9,7 @@ class Players(Enum):
 
 class BaseState(ABC):
 
-    def __init__(self):
+    def __init__(self, state_par):
         self.points = {
             Players.RED: 0,
             Players.BLUE: 0

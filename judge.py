@@ -85,8 +85,8 @@ class Judge:
         elif 'python' in lang:
             source_file = f"{file_name}.py"
             open(source_file, 'w').write(source)
-
-            command = ["python3", source_file]
+            print("{0}/lang_bin/python_venv/bin/python3".format(config.BASIC_PATH))
+            command = ["{0}/lang_bin/python_venv/bin/python3".format(config.BASIC_PATH), source_file]
 
         elif 'java' in lang:
             # TODO: add java support

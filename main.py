@@ -18,10 +18,12 @@ def startup():
     Create working directory for workers
     :return:
     """
-    if os.path.exists('tmp'):
-        shutil.rmtree('tmp')
 
-    os.mkdir('tmp')
+    # TODO: move to configure file
+    if os.path.exists('/tmp/judge'):
+        shutil.rmtree('/tmp/judge')
+
+    os.mkdir('/tmp/judge')
     Sandbox.generate_profile()
 
     if not os.path.exists('logs'):

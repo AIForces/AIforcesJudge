@@ -15,5 +15,7 @@ class Sandbox:
 
     @staticmethod
     def run(command):
+        print("running in sandbox using")
+        print(SANDBOX["command"] + command)
         return sp.Popen(SANDBOX["command"] + command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
                         universal_newlines=True)

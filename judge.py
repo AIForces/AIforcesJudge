@@ -2,15 +2,16 @@ import multiprocessing
 import subprocess as sp
 import time
 from copy import deepcopy
-from states.base_state import *
-from  os.path import join
+from os.path import join
+from select import select
+
 import requests
 
+from states.base_state import *
 from sandbox import Sandbox
 import config
 import states
 from exceptions import *
-
 
 
 def _get_state(game: str) -> states.BaseState:
@@ -119,16 +120,17 @@ class Judge:
             if player.poll() is not None:
                 self._state.player_error(self._state.current_player.value, "RE")
                 continue
-            try:
-                # TODO: Write good TL management
-                player.stdin.write(self._state.get_input())
-                # Investigate shit. WTF newline?
-                player.stdin.flush()
-                time.sleep(self._timeout)
-                output = player.stdout.readline()
-            except sp.TimeoutExpired:
+
+            player.stdin.write(self._state.get_input())
+            # Investigate shit. WTF newline?
+            player.stdin.flush()
+
+            # no data for read in player.stdout
+            if len(select([player.stdout], [], [], self._timeout)[0]) == 0:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
+
+            output = player.stdout.readline()
 
             try:
                 try:

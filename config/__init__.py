@@ -36,6 +36,7 @@ SANDBOX = {
     ],
 
     "options": [
+        'quiet',
         'read-only /',
         'disable-mnt',
         'private-etc judge',

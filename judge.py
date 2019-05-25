@@ -3,13 +3,14 @@ import subprocess as sp
 import time
 from copy import deepcopy
 from states.base_state import *
-
+from  os.path import join
 import requests
 
 from sandbox import Sandbox
 import config
 import states
 from exceptions import *
+
 
 
 def _get_state(game: str) -> states.BaseState:
@@ -86,8 +87,7 @@ class Judge:
         elif 'python' in lang:
             source_file = f"{file_name}.py"
             open(source_file, 'w').write(source)
-            print("{0}/lang_bin/python_venv/bin/python3".format(config.BASIC_PATH))
-            command = ["{0}/lang_bin/python_venv/bin/python3".format(config.BASIC_PATH), source_file]
+            command = [join(config.PYTHON_VENV_PATH, 'python3'), source_file]
 
         elif 'java' in lang:
             # TODO: add java support

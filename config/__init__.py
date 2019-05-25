@@ -9,12 +9,13 @@ TRUSTED_IPS = ['127.0.0.1']
 DEBUG = True
 BASIC_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))).parent)
 SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
+PYTHON_VENV_PATH = '/etc/judge/python_venv'
 
 SANDBOX = {
     "command": ["firejail", "--profile={}".format(SANDBOX_PROFILE_PATH)],
     "blacklisted_dirs": [
         '/bin',
-        '/usr',
+        # '/usr',
         '/home',
         '/lib32',
         '/sys',
@@ -28,7 +29,6 @@ SANDBOX = {
         '/libx32',
         '/opt',
         '/sbin',
-        '/etc',
         '/lost+found',
         '/srv',
         '/var'
@@ -37,6 +37,7 @@ SANDBOX = {
     "options": [
         'read-only /',
         'disable-mnt',
+        'private-etc judge',
         'apparmor',
         'caps.drop all',
         'seccomp',

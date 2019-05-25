@@ -10,6 +10,7 @@ import flask
 from app import app
 import worker
 import config
+from sandbox import Sandbox
 
 
 def startup():
@@ -21,6 +22,7 @@ def startup():
         shutil.rmtree('tmp')
 
     os.mkdir('tmp')
+    Sandbox.generate_profile()
 
     if not os.path.exists('logs'):
         os.mkdir('logs')

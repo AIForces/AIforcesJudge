@@ -6,6 +6,7 @@ from states.base_state import *
 
 import requests
 
+from sandbox import Sandbox
 import config
 import states
 from exceptions import *
@@ -108,8 +109,7 @@ class Judge:
         self._before_run()
 
         if not self._state.game_over:
-            players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
-                                universal_newlines=True) for i in range(2)]
+            players = [Sandbox.run(self._cmd[i]) for i in range(2)]
             self._log.append(deepcopy(self._state.get_log()))
             print(f"starting challenge #{self._challenge_id}")
             steps = 1

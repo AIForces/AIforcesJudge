@@ -50,7 +50,7 @@ def res_callback(res):
 
 
 def init_process():
-    path = f'/tmp/judge/{os.getpid()}'
+    path = f'/etc/judge/tmp/{os.getpid()}'
     if not os.path.exists(path):
         os.mkdir(path)
     os.chdir(path)

@@ -22,6 +22,7 @@ SANDBOX = {
         '/sys',
         '/vmlinuz',
         '/boot',
+        '/tmp'
         '/initrd.img',
         '/vmlinuz.old',
         '/dev',
@@ -38,7 +39,6 @@ SANDBOX = {
         'read-only /',
         'disable-mnt',
         'private-etc judge',
-        'private-tmp judge',
         'apparmor',
         'caps.drop all',
         'seccomp',

@@ -20,10 +20,10 @@ def startup():
     """
 
     # TODO: move to configure file
-    if os.path.exists('/tmp/judge'):
-        shutil.rmtree('/tmp/judge')
+    if os.path.exists('/etc/judge/tmp'):
+        shutil.rmtree('/etc/judge/tmp')
 
-    os.mkdir('/tmp/judge')
+    os.mkdir('/etc/judge/tmp')
     Sandbox.generate_profile()
 
     if not os.path.exists('logs'):

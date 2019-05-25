@@ -1,3 +1,3 @@
-mkdir lang_bin
-mkdir lang_bin/python_venv
-python3 -m venv lang_bin/python_venv
+mkdir /etc/judge
+mkdir /etc/judge/python_venv
+python3 -m venv /etc/judge/python_venv

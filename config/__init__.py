@@ -14,7 +14,7 @@ SANDBOX = {
     "command": ["firejail", "--profile={}".format(SANDBOX_PROFILE_PATH)],
     "blacklisted_dirs": [
         '/bin',
-        '/usr'
+        '/usr',
         '/home',
         '/lib32',
         '/sys',

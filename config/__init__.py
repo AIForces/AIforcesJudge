@@ -38,7 +38,7 @@ SANDBOX = {
         'read-only /',
         'disable-mnt',
         'private-etc judge',
-        'private-tmp',
+        'private-tmp judge',
         'apparmor',
         'caps.drop all',
         'seccomp',

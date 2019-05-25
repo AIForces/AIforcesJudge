@@ -11,6 +11,7 @@ BASIC_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))).parent)
 SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
 PYTHON_VENV_PATH = '/etc/judge/python_venv/bin'
 
+# TODO: add sandboxing of a tmp folder of other workers
 SANDBOX = {
     "command": ["firejail", "--profile={}".format(SANDBOX_PROFILE_PATH)],
     "blacklisted_dirs": [
@@ -37,7 +38,7 @@ SANDBOX = {
         'read-only /',
         'disable-mnt',
         'private-etc judge',
-        'private-tmp'
+        'private-tmp',
         'apparmor',
         'caps.drop all',
         'seccomp',

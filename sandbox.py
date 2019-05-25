@@ -1,11 +1,11 @@
-from config import SANDBOX
+from config import SANDBOX_PROFILE_PATH, SANDBOX
 import subprocess as sp
 
 
 class Sandbox:
     @staticmethod
     def generate_profile():
-        profile = open("", "w")
+        profile = open(SANDBOX_PROFILE_PATH, "w")
         for bl_dir in SANDBOX["blacklisted_dirs"]:
             profile.write("blacklist {0}".format(bl_dir))
         for option in SANDBOX["options"]:

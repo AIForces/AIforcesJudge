@@ -17,6 +17,6 @@ class Sandbox:
     def run(command, player_id):
         print("running in sandbox using")
         player = 'first' if player_id == 0 else 'second'
-        print(SANDBOX["command"] + [f"private=./f{player}"] + command)
-        return sp.Popen(SANDBOX["command"] + [f"private=./f{player}"] + command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
+        print(' '.join(SANDBOX["command"] + [f"--private={player}"] + command))
+        return sp.Popen(SANDBOX["command"] + [f"--private={player}"] + command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
                         universal_newlines=True)

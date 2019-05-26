@@ -63,6 +63,7 @@ def init_process():
         os.makedirs(path)
         code = subprocess.call(['python3', '-m', 'venv', join(path, 'venv')])
         if code != 0:
-            print("Error while creating venv")
+            print(f"Error while creating venv {os.getpid()}")
+            exit(1)
     os.chdir(my_wd)
     print(f"init new worker {os.getpid()}")

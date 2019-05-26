@@ -72,18 +72,18 @@ class Judge:
         lang = lang.lower()
         command = ""
         if 'c++' in lang:
-            source_file = f"{file_name}.cpp"
+            source_file = f"{file_name}/{file_name}.cpp"
             open(source_file, 'w').write(source)
-            code = sp.call(['g++', '-std=c++17', '-O2', '-o', file_name, source_file])
+            code = sp.call(['g++', '-std=c++17', '-O2', '-o', f'{file_name}/{file_name}', source_file])
             if code != 0:
                 raise CompilationError
 
             command = [f"./{file_name}"]
 
         elif 'python' in lang:
-            source_file = f"{file_name}.py"
+            source_file = f"{file_name}/{file_name}.py"
             open(source_file, 'w').write(source)
-            command = [join(config.PYTHON_VENV_PATH, 'python3'), source_file]
+            command = [join(file_name, join(config.PYTHON_VENV_PATH, 'python3')), f"{file_name}.py"]
 
         elif 'java' in lang:
             # TODO: add java support
@@ -120,11 +120,12 @@ class Judge:
 
             # no data to read in player.stdout
             if len(select([player.stdout], [], [], self._timeout)[0]) == 0:
+                print('TL')
                 self._state.player_error(self._state.current_player, "TL")
                 continue
 
             output = player.stdout.readline()
-
+            print('output', len(output))
             try:
                 try:
                     self._state.change_state(output)

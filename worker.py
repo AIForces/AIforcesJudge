@@ -15,6 +15,9 @@ def run(queue: mp.Queue):
     while True:
         data = queue.get()
         if isinstance(data, str) and data == 'die':
+            my_cwd = os.getcwd()
+            os.chdir('..')
+            shutil.rmtree(my_cwd)
             logger.info('time to go out with a bang!')
             return
         print(type(data))

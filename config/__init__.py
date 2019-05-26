@@ -12,12 +12,13 @@ SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
 PYTHON_VENV_PATH = 'venv/bin'
 
 # TODO: add sandboxing of a tmp folder of other workers
+# TODO: add personal sandbox
 SANDBOX = {
     "command": ["firejail", f"--profile={SANDBOX_PROFILE_PATH}", "--private=."],
     "blacklisted_dirs": [
         '/bin',
         # '/usr',
-        '/home',
+        '/etc',
         '/lib32',
         '/sys',
         '/vmlinuz',
@@ -39,7 +40,6 @@ SANDBOX = {
         'quiet',
         'read-only /',
         'disable-mnt',
-        'private-etc judge',
         'apparmor',
         'caps.drop all',
         'seccomp',
@@ -61,8 +61,10 @@ SANDBOX = {
     ],
 
     "rlimits": [
-        'rlimit-as 123456789012',
-        'rlimit-cpu 123',
+        # ML is 512 MB
+        'rlimit-as 536870912',
+        # TL is 1000 seconds
+        'rlimit-cpu 1000',
         'rlimit-nproc 0',
         'rlimit-sigpending 0'
     ]

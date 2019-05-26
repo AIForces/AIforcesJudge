@@ -13,7 +13,7 @@ PYTHON_VENV_PATH = '/etc/judge/python_venv/bin'
 
 # TODO: add sandboxing of a tmp folder of other workers
 SANDBOX = {
-    "command": ["firejail", "--profile={}".format(SANDBOX_PROFILE_PATH)],
+    "command": ["firejail", f"--profile={SANDBOX_PROFILE_PATH}", "--private=."],
     "blacklisted_dirs": [
         '/bin',
         # '/usr',

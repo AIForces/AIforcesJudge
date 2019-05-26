@@ -1,5 +1,4 @@
 blacklist /bin
-blacklist /home
 blacklist /lib32
 blacklist /sys
 blacklist /vmlinuz
@@ -16,8 +15,7 @@ blacklist /srv
 blacklist /var
 read-only /
 disable-mnt
-private-etc judge
-private-tmpapparmor
+apparmor
 caps.drop all
 seccomp
 memory-deny-write-execute

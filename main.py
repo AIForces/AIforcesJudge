@@ -10,6 +10,7 @@ import flask
 from app import app
 import worker
 import config
+from sandbox import Sandbox
 
 
 def startup():
@@ -17,10 +18,13 @@ def startup():
     Create working directory for workers
     :return:
     """
+
+    # TODO: move to configure file
     if os.path.exists('tmp'):
         shutil.rmtree('tmp')
 
     os.mkdir('tmp')
+    Sandbox.generate_profile()
 
     if not os.path.exists('logs'):
         os.mkdir('logs')

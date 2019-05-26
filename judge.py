@@ -1,18 +1,16 @@
-import multiprocessing
 import subprocess as sp
-import time
 from copy import deepcopy
+from os.path import join
+from select import select
+
 from states.base_state import *
-
-import requests
-
+from sandbox import Sandbox
 import config
 import states
 from exceptions import *
 
 
-def _get_state(game: str) -> states.BaseState:
-
+def _get_state(game: str):
     _module = getattr(states, f'{game}_state')
     return _module.State
 
@@ -74,19 +72,18 @@ class Judge:
         lang = lang.lower()
         command = ""
         if 'c++' in lang:
-            source_file = f"{file_name}.cpp"
+            source_file = f"{file_name}/{file_name}.cpp"
             open(source_file, 'w').write(source)
-            code = sp.call(['g++', '-std=c++17', '-O2', '-o', file_name, source_file])
+            code = sp.call(['g++', '-std=c++17', '-O2', '-o', f'{file_name}/{file_name}', source_file])
             if code != 0:
                 raise CompilationError
 
             command = [f"./{file_name}"]
 
         elif 'python' in lang:
-            source_file = f"{file_name}.py"
+            source_file = f"{file_name}/{file_name}.py"
             open(source_file, 'w').write(source)
-
-            command = ["python3", source_file]
+            command = [join(file_name, join(config.PYTHON_VENV_PATH, 'python3')), f"{file_name}.py"]
 
         elif 'java' in lang:
             # TODO: add java support
@@ -94,42 +91,41 @@ class Judge:
 
         return command
 
-    def _send_result(self):
-        data = {
+    def _compose_response(self):
+        return {
             "challenge_id": self._challenge_id,
             "verdicts": self._state.get_verdicts(),
             "winner": self._state.get_winner(),
             "log": self._log
         }
-        requests.post(config.RESULT_ENDPOINT, json=data)
 
     def run(self):
         # TODO: add memory check
         self._before_run()
 
         if not self._state.game_over:
-            players = [sp.Popen(self._cmd[i], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
-                                universal_newlines=True) for i in range(2)]
+            players = [Sandbox.run(self._cmd[i], i) for i in range(2)]
             self._log.append(deepcopy(self._state.get_log()))
             print(f"starting challenge #{self._challenge_id}")
-            steps = 1
         while not self._state.game_over:
-            print(f'# {self._challenge_id} step {steps}')
+            print(f'# {self._challenge_id} step {self._state.number_of_move}')
             player = players[self._state.current_player.value]
             if player.poll() is not None:
                 self._state.player_error(self._state.current_player.value, "RE")
                 continue
-            try:
-                # TODO: Write good TL management
-                player.stdin.write(self._state.get_input())
-                # Investigate shit. WTF newline?
-                player.stdin.flush()
-                time.sleep(self._timeout)
-                output = player.stdout.readline()
-            except sp.TimeoutExpired:
+
+            player.stdin.write(self._state.get_input())
+            # Investigate shit. WTF newline?
+            player.stdin.flush()
+
+            # no data to read in player.stdout
+            if len(select([player.stdout], [], [], self._timeout)[0]) == 0:
+                print('TL')
                 self._state.player_error(self._state.current_player, "TL")
                 continue
 
+            output = player.stdout.readline()
+            print('output', len(output))
             try:
                 try:
                     self._state.change_state(output)
@@ -142,8 +138,7 @@ class Judge:
 
             self._log.append(deepcopy(self._state.get_log()))
             self._state.change_player()
-            steps += 1
 
         self._log.append(deepcopy(self._state.get_log()))
-        self._send_result()
         print('done')
+        return self._compose_response()

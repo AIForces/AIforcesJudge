@@ -1,0 +1,57 @@
+# blacklist /bin
+blacklist /home
+blacklist /lib32
+blacklist /sys
+blacklist /vmlinuz
+blacklist /boot
+blacklist /initrd.img
+# blacklist /lib64
+blacklist /tmp
+blacklist /vmlinuz.old
+blacklist /dev
+blacklist /initrd.img.old
+blacklist /libx32
+blacklist /opt
+blacklist /sbin
+# blacklist /usr
+blacklist /etc
+# blacklist /lib
+blacklist /lost+found
+# blacklist /proc
+blacklist /srv
+blacklist /var
+# private-home
+
+# private-usr execvp
+read-only /
+# private
+disable-mnt
+# private-dev
+
+apparmor
+caps.drop all
+seccomp
+memory-deny-write-execute
+nonewprivs
+noroot
+x11 none
+
+rlimit-as 123456789012
+rlimit-cpu 123
+rlimit-nproc 0
+rlimit-sigpending 0
+
+nodvd
+nogroups
+# shell none
+nodbus
+nosound
+noautopulse
+notv
+nou2f
+novideo
+no3d
+net none
+
+# cpu 0,1,2
+# nice -5

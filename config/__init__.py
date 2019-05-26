@@ -6,8 +6,14 @@ IP = "127.0.0.1"
 PORT = 3001
 RESULT_ENDPOINT = "http://127.0.0.1:3000/judge/receive_data"
 TRUSTED_IPS = ['127.0.0.1']
+
 DEBUG = True
+LOGGER_FORMAT = "[<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level>] " \
+                "(<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>) " \
+                "[<level>{message}</level>]"
+
 BASIC_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))).parent)
+
 SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
 PYTHON_VENV_PATH = 'venv/bin'
 

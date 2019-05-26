@@ -5,13 +5,15 @@ import config
 import os
 from os.path import join
 import shutil
+
+from loguru import logger
+
 from judge import Judge
 
 
 def run(queue: mp.Queue):
-    logger = mp.get_logger()
     pool = mp.Pool(initializer=init_process)
-    print("Starting process poll...")
+    logger.info("Starting process poll...")
     while True:
         data = queue.get()
         if isinstance(data, str) and data == 'die':
@@ -20,10 +22,10 @@ def run(queue: mp.Queue):
             shutil.rmtree(my_cwd)
             logger.info('time to go out with a bang!')
             return
-        print(type(data))
         pool.apply_async(run_fight, (data, ), callback=res_callback, error_callback=err_callback)
 
 
+@logger.catch
 def run_fight(data, *args, **kwargs):
 
     # TODO: timeout from request
@@ -35,13 +37,13 @@ def run_fight(data, *args, **kwargs):
         challenge_id=data['challenge_id'],
         state_par=data['state_par']
     )
-
     data = j.run()
     requests.post(config.RESULT_ENDPOINT, json=data)
+    logger.success(f'{data["challenge_id"]} was sent successfully')
 
 
 def err_callback(exc):
-    print(f'ERROR at Judge \n{exc}')
+    logger.warning(f'ERROR at Judge \n{exc}')
     # TODO: implement errors check
     pass
 
@@ -63,7 +65,7 @@ def init_process():
         os.makedirs(path)
         code = subprocess.call(['python3', '-m', 'venv', join(path, 'venv')])
         if code != 0:
-            print(f"Error while creating venv {os.getpid()}")
+            logger.critical(f"Error while creating venv {os.getpid()}")
             exit(1)
     os.chdir(my_wd)
-    print(f"init new worker {os.getpid()}")
+    logger.success(f"init new worker {os.getpid()}")

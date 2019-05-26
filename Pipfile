@@ -9,6 +9,7 @@ verify_ssl = true
 flask = "*"
 psutil = "*"
 requests = "*"
+loguru = "*"
 
 [scripts]
 s = "python3 main.py"

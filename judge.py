@@ -3,6 +3,8 @@ from copy import deepcopy
 from os.path import join
 from select import select
 
+from loguru import logger
+
 from states.base_state import *
 from sandbox import Sandbox
 import config
@@ -106,9 +108,9 @@ class Judge:
         if not self._state.game_over:
             players = [Sandbox.run(self._cmd[i], i) for i in range(2)]
             self._log.append(deepcopy(self._state.get_log()))
-            print(f"starting challenge #{self._challenge_id}")
+            logger.info(f"starting challenge #{self._challenge_id}")
         while not self._state.game_over:
-            print(f'# {self._challenge_id} step {self._state.number_of_move}')
+            logger.debug(f'# {self._challenge_id} step {self._state.number_of_move}')
             player = players[self._state.current_player.value]
             if player.poll() is not None:
                 self._state.player_error(self._state.current_player.value, "RE")
@@ -120,12 +122,11 @@ class Judge:
 
             # no data to read in player.stdout
             if len(select([player.stdout], [], [], self._timeout)[0]) == 0:
-                print('TL')
+                logger.debug('TL')
                 self._state.player_error(self._state.current_player, "TL")
                 continue
 
             output = player.stdout.readline()
-            print('output', len(output))
             try:
                 try:
                     self._state.change_state(output)
@@ -140,5 +141,4 @@ class Judge:
             self._state.change_player()
 
         self._log.append(deepcopy(self._state.get_log()))
-        print('done')
         return self._compose_response()

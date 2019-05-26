@@ -6,6 +6,7 @@ import shutil
 import sys
 
 import flask
+from loguru import logger
 
 from app import app
 import worker
@@ -31,18 +32,14 @@ def startup():
 
 
 def shutdown():
-    print('at exit')
+    logger.info('at exit')
     app.mp_queue.put('die')
 
 
 def setup_logger():
-    logger = multiprocessing.get_logger()
-    handler = logging.FileHandler('logs/judges.log')
-    fmt = logging.Formatter("[%(asctime)s |%(levelname)s]: %(message)s")
-    handler.setFormatter(fmt)
-    handler.setLevel(logging.DEBUG)
-    logger.addHandler(handler)
-    return logger
+    logger.remove(0)
+    level = 'DEBUG' if config.DEBUG else 'INFO'
+    logger.add(sys.stdout, level=level)
 
 
 def main():
@@ -51,7 +48,8 @@ def main():
     :return:
     """
     startup()
-    print(f'Pid: {os.getpid()}')
+    setup_logger()
+    logger.info(f'forking...')
     queue = multiprocessing.Queue()
     pid = os.fork()
     if pid == 0:

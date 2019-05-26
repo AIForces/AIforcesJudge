@@ -39,7 +39,7 @@ def shutdown():
 def setup_logger():
     logger.remove(0)
     level = 'DEBUG' if config.DEBUG else 'INFO'
-    logger.add(sys.stdout, level=level)
+    logger.add(sys.stdout, level=level, enqueue=True)
 
 
 def main():

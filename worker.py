@@ -1,5 +1,7 @@
 import multiprocessing as mp
 import subprocess
+import requests
+import config
 import os
 from os.path import join
 import shutil
@@ -22,7 +24,6 @@ def run(queue: mp.Queue):
 def run_fight(data, *args, **kwargs):
 
     # TODO: timeout from request
-
     j = Judge(
         game=data['game'],
         lang=data['lang'],
@@ -32,7 +33,8 @@ def run_fight(data, *args, **kwargs):
         state_par=data['state_par']
     )
 
-    j.run()
+    data = j.run()
+    requests.post(config.RESULT_ENDPOINT, json=data)
 
 
 def err_callback(exc):

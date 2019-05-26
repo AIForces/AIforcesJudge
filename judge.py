@@ -3,8 +3,6 @@ from copy import deepcopy
 from os.path import join
 from select import select
 
-import requests
-
 from states.base_state import *
 from sandbox import Sandbox
 import config
@@ -94,14 +92,13 @@ class Judge:
 
         return command
 
-    def _send_result(self):
-        data = {
+    def _compose_response(self):
+        return {
             "challenge_id": self._challenge_id,
             "verdicts": self._state.get_verdicts(),
             "winner": self._state.get_winner(),
             "log": self._log
         }
-        requests.post(config.RESULT_ENDPOINT, json=data)
 
     def run(self):
         # TODO: add memory check
@@ -143,5 +140,5 @@ class Judge:
             self._state.change_player()
 
         self._log.append(deepcopy(self._state.get_log()))
-        self._send_result()
         print('done')
+        return self._compose_response()

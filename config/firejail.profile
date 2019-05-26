@@ -1,20 +1,7 @@
-blacklist /bin
-blacklist /lib32
-blacklist /sys
-blacklist /vmlinuz
-blacklist /boot
-blacklist /initrd.img
-blacklist /vmlinuz.old
-blacklist /dev
-blacklist /initrd.img.old
-blacklist /libx32
-blacklist /opt
-blacklist /sbin
-blacklist /lost+found
-blacklist /srv
-blacklist /var
+quiet
 read-only /
 disable-mnt
+private-etc judge
 apparmor
 caps.drop all
 seccomp
@@ -33,6 +20,22 @@ nou2f
 novideo
 no3d
 net none
+blacklist /bin
+blacklist /home
+blacklist /lib32
+blacklist /sys
+blacklist /vmlinuz
+blacklist /boot
+blacklist /tmp/initrd.img
+blacklist /vmlinuz.old
+blacklist /dev
+blacklist /initrd.img.old
+blacklist /libx32
+blacklist /opt
+blacklist /sbin
+blacklist /lost+found
+blacklist /srv
+blacklist /var
 rlimit-as 123456789012
 rlimit-cpu 123
 rlimit-nproc 0

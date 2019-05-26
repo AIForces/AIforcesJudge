@@ -9,7 +9,7 @@ TRUSTED_IPS = ['127.0.0.1']
 DEBUG = True
 BASIC_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))).parent)
 SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
-PYTHON_VENV_PATH = '/etc/judge/python_venv/bin'
+PYTHON_VENV_PATH = 'venv/bin'
 
 # TODO: add sandboxing of a tmp folder of other workers
 SANDBOX = {

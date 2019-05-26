@@ -1,4 +1,5 @@
 import multiprocessing as mp
+import subprocess
 import os
 
 from judge import Judge
@@ -49,8 +50,12 @@ def res_callback(res):
 
 
 def init_process():
-    path = f'/etc/judge/tmp/{os.getpid()}'
+    path = f'tmp/{os.getpid()}'
     if not os.path.exists(path):
         os.mkdir(path)
     os.chdir(path)
+
+    # python3 -m venv venv
+    code = subprocess.call(['python3', '-m', 'venv', 'venv'])
+
     print(f"init new worker {os.getpid()}")

@@ -56,6 +56,8 @@ class State(BaseState):
             w, h = 15, 15
         elif level == 2:
             w, h = 20, 20
+        elif level == 3:
+            w, h = 50, 50
         ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
         ans[0][0] = BoardCells.RED_PLAYER
         ans[-1][-1] = BoardCells.BLUE_PLAYER

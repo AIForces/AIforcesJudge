@@ -14,8 +14,9 @@ class Sandbox:
             profile.write("{0}\n".format(rlimits))
 
     @staticmethod
-    def run(command):
+    def run(player_id, command):
         print("running in sandbox using")
-        print(SANDBOX["command"] + command)
+        player = 'first' if player_id == 0 else 'second'
+        print(SANDBOX["command"] + [f"private=./f{player}"] + command)
         return sp.Popen(SANDBOX["command"] + command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.DEVNULL,
                         universal_newlines=True)

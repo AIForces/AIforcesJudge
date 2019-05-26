@@ -1,7 +1,8 @@
 import multiprocessing as mp
 import subprocess
 import os
-
+from os.path import join
+import shutil
 from judge import Judge
 
 
@@ -50,12 +51,13 @@ def res_callback(res):
 
 
 def init_process():
-    path = f'tmp/{os.getpid()}'
-    if not os.path.exists(path):
-        os.mkdir(path)
-    os.chdir(path)
-
-    # python3 -m venv venv
-    code = subprocess.call(['python3', '-m', 'venv', 'venv'])
-
+    my_wd = f'tmp/{os.getpid()}'
+    for path in [f'{my_wd}/first', f'{my_wd}/second']:
+        if os.path.exists(path):
+            shutil.rmtree(path)
+        os.makedirs(path)
+        code = subprocess.call(['python3', '-m', 'venv', join(path, 'venv')])
+        if code != 0:
+            print("Error while creating venv")
+    os.chdir(my_wd)
     print(f"init new worker {os.getpid()}")

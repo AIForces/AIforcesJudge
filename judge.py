@@ -1,6 +1,4 @@
-import multiprocessing
 import subprocess as sp
-import time
 from copy import deepcopy
 from os.path import join
 from select import select
@@ -14,7 +12,7 @@ import states
 from exceptions import *
 
 
-def _get_state(game: str) -> states.BaseState:
+def _get_state(game: str)
 
     _module = getattr(states, f'{game}_state')
     return _module.State
@@ -110,12 +108,11 @@ class Judge:
         self._before_run()
 
         if not self._state.game_over:
-            players = [Sandbox.run(self._cmd[i]) for i in range(2)]
+            players = [Sandbox.run(self._cmd[i], i) for i in range(2)]
             self._log.append(deepcopy(self._state.get_log()))
             print(f"starting challenge #{self._challenge_id}")
-            steps = 1
         while not self._state.game_over:
-            print(f'# {self._challenge_id} step {steps}')
+            print(f'# {self._challenge_id} step {self._state.number_of_move}')
             player = players[self._state.current_player.value]
             if player.poll() is not None:
                 self._state.player_error(self._state.current_player.value, "RE")
@@ -125,7 +122,7 @@ class Judge:
             # Investigate shit. WTF newline?
             player.stdin.flush()
 
-            # no data for read in player.stdout
+            # no data to read in player.stdout
             if len(select([player.stdout], [], [], self._timeout)[0]) == 0:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
@@ -144,7 +141,6 @@ class Judge:
 
             self._log.append(deepcopy(self._state.get_log()))
             self._state.change_player()
-            steps += 1
 
         self._log.append(deepcopy(self._state.get_log()))
         self._send_result()

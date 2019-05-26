@@ -11,10 +11,8 @@ BASIC_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))).parent)
 SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
 PYTHON_VENV_PATH = 'venv/bin'
 
-# TODO: add sandboxing of a tmp folder of other workers
-# TODO: add personal sandbox
 SANDBOX = {
-    "command": ["firejail", f"--profile={SANDBOX_PROFILE_PATH}", "--private=."],
+    "command": ["firejail", f"--profile={SANDBOX_PROFILE_PATH}"],
     "blacklisted_dirs": [
         '/bin',
         # '/usr',

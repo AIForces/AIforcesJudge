@@ -10,8 +10,7 @@ import states
 from exceptions import *
 
 
-def _get_state(game: str)
-
+def _get_state(game: str):
     _module = getattr(states, f'{game}_state')
     return _module.State
 

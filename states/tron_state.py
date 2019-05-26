@@ -54,10 +54,12 @@ class State(BaseState):
     def get_start_board(level):
         if level == 1:
             w, h = 15, 15
-            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
-            ans[0][0] = BoardCells.RED_PLAYER
-            ans[-1][-1] = BoardCells.BLUE_PLAYER
-            return ans
+        elif level == 2:
+            w, h = 50, 50
+        ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
+        ans[0][0] = BoardCells.RED_PLAYER
+        ans[-1][-1] = BoardCells.BLUE_PLAYER
+        return ans
 
     @staticmethod
     def get_tail_type(player, last, cur):
@@ -106,7 +108,7 @@ class State(BaseState):
 
     def __init__(self, state_par):
         super().__init__(state_par)
-        self.level = 1
+        self.level = state_par["level"]
         self.board = State.get_start_board(state_par["level"])
         self.size = [len(self.board), len(self.board[0])]
         self.number_of_move = 0

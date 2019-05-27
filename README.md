@@ -7,7 +7,7 @@ Works only on Linux.
 ## Get started
 the system is written in python3 and uses firejail as sandbox
 
-####Prerequisites
+#### Prerequisites
 * `python3`
 * `pipenv`
 * `venv`
@@ -32,7 +32,7 @@ and last step to do is just run this command
 pipenv run s
 ```
 
-####Advanced
+#### Advanced
 if you want to setup system as systemd unit run this commands
 ```bash
 sudo ln -s FULL_PATH_TO_AIforcesJudge/config/ai_forces_judge.service /etc/systemd/system

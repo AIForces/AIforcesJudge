@@ -5,7 +5,7 @@ import os
 import shutil
 import sys
 
-import flask
+from flask.logging import default_handler
 from loguru import logger
 
 from app import app
@@ -37,9 +37,23 @@ def shutdown():
 
 
 def setup_logger():
+
     logger.remove(0)
     level = 'DEBUG' if config.DEBUG else 'INFO'
     logger.add(sys.stdout, level=level, enqueue=True)
+
+    # remove flask default log handler
+    app.logger.removeHandler(default_handler)
+
+    # class for intercept flask logs
+    class InterceptHandler(logging.Handler):
+        def emit(self, record):
+            logger.debug(record)
+            # Retrieve context where the logging call occurred, this happens to be in the 6th frame upward
+            logger_opt = logger.opt(depth=6, exception=record.exc_info)
+            logger_opt.log(record.levelno, record.getMessage())
+
+    app.logger.addHandler(InterceptHandler())
 
 
 def main():

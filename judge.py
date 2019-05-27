@@ -104,7 +104,7 @@ class Judge:
     def run(self):
         # TODO: add memory check
         self._before_run()
-
+        players = None
         if not self._state.game_over:
             players = [Sandbox.run(self._cmd[i], i) for i in range(2)]
             self._log.append(deepcopy(self._state.get_log()))
@@ -141,4 +141,8 @@ class Judge:
             self._state.change_player()
 
         self._log.append(deepcopy(self._state.get_log()))
+        if players is not None:
+            for player in players:
+                player.kill()
+
         return self._compose_response()

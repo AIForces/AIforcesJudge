@@ -2,10 +2,10 @@
 
 This project is a part of [AIforces](https://github.com/aalekseevx/AIforces)
 
-AIforces Judge is separated multithreaded judging system for game bots competitions.
-Works only on Linux.
+AIforces Judge is a separated multithreaded judging system for game bots competitions.
+Works only on Unux. (Tested only on Ubuntu)
 ## Get started
-the system is written in python3 and uses firejail as sandbox
+The system is written in python3 and uses firejail as a sandbox
 
 #### Prerequisites
 * `python3`
@@ -13,13 +13,14 @@ the system is written in python3 and uses firejail as sandbox
 * `venv`
 * `firejail`
 
-If use ubuntu based systems you can run 
+Installation on ubuntu-based systems.
+Satisfy the prerequisites
 
 ```bash
 sudo apt-get install pipenv python3-venv firejail
 ```
 
-After it you can clone repository and install python packages
+After that, clone repository and install python packages
 
 ```bash
 git clone https://github.com/AbsoluteNikola/AIforcesJudge.git
@@ -27,7 +28,7 @@ cd AIforcesJudge
 pipenv update
 ```
 
-and last step to do is just run this command
+Finally, start the application.
 ```bash
 pipenv run s
 ```

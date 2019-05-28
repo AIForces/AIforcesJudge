@@ -29,7 +29,7 @@ class BoardCells(Enum):
     BLUE_TAIL_START_R = 22, 'W'
     BLUE_TAIL_START_U = 23, 'W'
     BLUE_TAIL_START_D = 24, 'W'
-    BLOCK = 25, 'W'
+    BLOCK = 25, 'X'
     COIN = 26, 'C'
     SPEED = 27, 'S'
     INVISIBILITY = 28, 'I'
@@ -54,11 +54,51 @@ class State(BaseState):
     def get_start_board(level):
         if level == 1:
             w, h = 15, 15
+            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
         elif level == 2:
             w, h = 20, 20
+            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
         elif level == 3:
+            w, h = 20, 20
+            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
+            b = BoardCells.BLOCK
+            f = BoardCells.EMPTY
+            basic_comp = [
+                [
+                    [b, b],
+                    [b, f]
+                ],
+                [
+                    [b for _ in range(8)]
+                ]
+            ]
+            blocks = []
+            for comp in basic_comp:
+                blocks.append(comp)
+                for _ in range(3):
+                    blocks.append(list(zip(*blocks[-1][::-1])))
+            positions = [
+                [2, 2],
+                [2, 16],
+                [16, 16],
+                [16, 2],
+
+                [4, 6],
+                [6, 15],
+                [15, 6],
+                [6, 4]
+            ]
+
+            for i, pos in enumerate(positions):
+                for x, row in enumerate(blocks[i]):
+                    for y, val in enumerate(row):
+                        ans[x + pos[0]][y + pos[1]] = val
+            print(ans)
+
+        elif level == 4:
             w, h = 50, 50
-        ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
+            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
+
         ans[0][0] = BoardCells.RED_PLAYER
         ans[-1][-1] = BoardCells.BLUE_PLAYER
         return ans

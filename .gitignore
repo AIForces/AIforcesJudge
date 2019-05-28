@@ -4,8 +4,9 @@ tmp
 *.pyc
 *.log
 */__pycache__/*
-config/firejail.profile
+config/*
 tests/JudgeTesting/tron_tests/*
 !tests/JudgeTesting/tron_tests/tron_tester.py
 !tests/JudgeTesting/tron_tests/player.cpp
 !tests/JudgeTesting/tron_tests/player.py
+!config/*.example

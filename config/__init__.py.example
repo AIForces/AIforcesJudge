@@ -1,0 +1,75 @@
+import os
+from pathlib import Path
+from os.path import join
+
+IP = "127.0.0.1"
+PORT = 3001
+RESULT_ENDPOINT = "http://127.0.0.1:3000/judge/receive_data"
+TRUSTED_IPS = ['127.0.0.1']
+
+DEBUG = True
+LOGGER_FORMAT = "[<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level>] " \
+                "(<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>) " \
+                "[<level>{message}</level>]"
+
+BASIC_PATH = str(Path(os.path.dirname(os.path.realpath(__file__))).parent)
+
+SANDBOX_PROFILE_PATH = join(BASIC_PATH, "config/firejail.profile")
+PYTHON_VENV_PATH = 'venv/bin'
+
+SANDBOX = {
+    "command": ["firejail", f"--profile={SANDBOX_PROFILE_PATH}"],
+    "blacklisted_dirs": [
+        '/bin',
+        # '/usr',
+        '/etc',
+        '/lib32',
+        '/sys',
+        '/vmlinuz',
+        '/boot',
+        '/tmp'
+        '/initrd.img',
+        '/vmlinuz.old',
+        '/dev',
+        '/initrd.img.old',
+        '/libx32',
+        '/opt',
+        '/sbin',
+        '/lost+found',
+        '/srv',
+        '/var'
+    ],
+
+    "options": [
+        'quiet',
+        'read-only /',
+        'disable-mnt',
+        'apparmor',
+        'caps.drop all',
+        'seccomp',
+        'memory-deny-write-execute',
+        'nonewprivs',
+        'noroot',
+        'x11 none',
+        'nodvd',
+        'nogroups',
+        'shell none',
+        'nodbus',
+        'nosound',
+        'noautopulse',
+        'notv',
+        'nou2f',
+        'novideo',
+        'no3d',
+        'net none'
+    ],
+
+    "rlimits": [
+        # ML is 512 MB
+        'rlimit-as 536870912',
+        # TL is 1000 seconds
+        'rlimit-cpu 1000',
+        'rlimit-nproc 0',
+        'rlimit-sigpending 0'
+    ]
+}

@@ -1,3 +1,4 @@
+import os
 import subprocess as sp
 from copy import deepcopy
 from os.path import join
@@ -126,13 +127,14 @@ class Judge:
                 self._state.player_error(self._state.current_player, "TL")
                 continue
 
-            output = player.stdout.readline()
             try:
                 try:
+                    output = os.read(player.stdout.fileno(), 1000).decode()
                     self._state.change_state(output)
-                except PresentationError:
+                except (PresentationError, UnicodeDecodeError):
                     self._state.player_error(self._state.current_player, "PE")
                     continue
+
             except MoveError:
                 self._state.player_error(self._state.current_player, "ME")
                 continue

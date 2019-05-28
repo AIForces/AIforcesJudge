@@ -13,6 +13,12 @@ def judge():
     :return:
     """
     ip = flask.request.remote_addr
+
+    # Trust everyone while running locally
+    if config.DEBUG:
+        config.RESULT_ENDPOINT = f'http:/{ip}:3000/judge/receive_data'
+        config.TRUSTED_IPS.append(ip)
+
     if ip not in config.TRUSTED_IPS:
         return "", 403
 

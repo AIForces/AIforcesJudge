@@ -104,18 +104,17 @@ class Judge:
 
     def run(self):
         try:
-            result = self._run()
+            self._run()
 
         except Exception as e:
             self._state.player_error(self._state.current_player, "FT")
             self._state.change_player()
             self._state.player_error(self._state.current_player, "FT")
-            result = self._compose_response()
 
             logger.critical(f'FT on challenge #{self._challenge_id}')
             logger.exception(e)
 
-        return result
+        return self._compose_response()
 
     def _run(self):
         # TODO: add memory check
@@ -161,5 +160,3 @@ class Judge:
         if players is not None:
             for player in players:
                 player.kill()
-
-        return self._compose_response()

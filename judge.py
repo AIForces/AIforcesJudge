@@ -103,6 +103,21 @@ class Judge:
         }
 
     def run(self):
+        try:
+            result = self._run()
+
+        except Exception as e:
+            self._state.player_error(self._state.current_player, "FT")
+            self._state.change_player()
+            self._state.player_error(self._state.current_player, "FT")
+            result = self._compose_response()
+
+            logger.critical(f'FT on challenge #{self._challenge_id}')
+            logger.exception(e)
+
+        return result
+
+    def _run(self):
         # TODO: add memory check
         self._before_run()
         players = None
@@ -114,7 +129,7 @@ class Judge:
             logger.debug(f'# {self._challenge_id} step {self._state.number_of_move}')
             player = players[self._state.current_player.value]
             if player.poll() is not None:
-                self._state.player_error(self._state.current_player.value, "RE")
+                self._state.player_error(self._state.current_player, "RE")
                 continue
 
             player.stdin.write(self._state.get_input())

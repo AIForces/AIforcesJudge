@@ -103,11 +103,12 @@ class Judge:
             "log": self._log
         }
 
-    def _update_status(self):
+    def _update_status(self, stage):
         r = None
         try:
             r = requests.post(config.STATUS_ENDPOINT, json={
                 "challenge_id": self._challenge_id,
+                "stage": stage,
                 "step": self._state.number_of_move
             })
         except ConnectionError:
@@ -131,6 +132,7 @@ class Judge:
         return self._compose_response()
 
     def _run(self):
+        self._update_status(stage="Preparing")
         self._before_run()
         players = None
         if not self._state.game_over:
@@ -140,7 +142,7 @@ class Judge:
         while not self._state.game_over:
 
             logger.debug(f'# {self._challenge_id} step {self._state.number_of_move}')
-            self._update_status()
+            self._update_status(stage="Running")
 
             player = players[self._state.current_player.value]
             if player.poll() is not None:

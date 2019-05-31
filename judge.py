@@ -4,6 +4,7 @@ from copy import deepcopy
 from os.path import join
 from select import select
 
+import requests
 from loguru import logger
 
 from states.base_state import *
@@ -102,6 +103,19 @@ class Judge:
             "log": self._log
         }
 
+    def _update_status(self):
+        r = None
+        try:
+            r = requests.post(config.STATUS_ENDPOINT, json={
+                "challenge_id": self._challenge_id,
+                "step": self._state.number_of_move
+            })
+        except ConnectionError:
+            logger.critical('server not available')
+
+        if r.status_code != 200:
+            logger.critical('error while updating result')
+
     def run(self):
         try:
             self._run()
@@ -117,7 +131,6 @@ class Judge:
         return self._compose_response()
 
     def _run(self):
-        # TODO: add memory check
         self._before_run()
         players = None
         if not self._state.game_over:
@@ -125,7 +138,10 @@ class Judge:
             self._log.append(deepcopy(self._state.get_log()))
             logger.info(f"starting challenge #{self._challenge_id}")
         while not self._state.game_over:
+
             logger.debug(f'# {self._challenge_id} step {self._state.number_of_move}')
+            self._update_status()
+
             player = players[self._state.current_player.value]
             if player.poll() is not None:
                 self._state.player_error(self._state.current_player, "RE")

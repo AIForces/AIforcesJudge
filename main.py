@@ -40,9 +40,10 @@ def update_judge_status(on=True):
     """
     requests.post('127.0.0')
 
+
 def shutdown():
-    logger.info('at exit')
-    app.mp_queue.put('die')
+    logger.info('shutdown')
+    app.mp_queue.put('DIE')
 
 
 def setup_logger():

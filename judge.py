@@ -1,3 +1,4 @@
+import importlib
 import os
 import subprocess as sp
 from copy import deepcopy
@@ -14,7 +15,14 @@ import states
 from exceptions import *
 
 
+NEED_REIMPORT_STATES = False
+
+
 def _get_state(game: str):
+
+    if NEED_REIMPORT_STATES:
+        importlib.reload(states)
+
     _module = getattr(states, f'{game}_state')
     return _module.State
 

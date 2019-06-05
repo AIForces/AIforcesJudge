@@ -7,7 +7,7 @@ from os.path import join
 
 from loguru import logger
 
-from judge import Judge
+import judge
 
 
 def run(queue: mp.Queue):
@@ -15,9 +15,18 @@ def run(queue: mp.Queue):
     logger.info("Starting process poll...")
     while True:
         data = queue.get()
-        if isinstance(data, str) and data == 'die':
-            logger.info('time to go out with a bang!')
-            return
+        # command task from flask
+        if isinstance(data, str):
+
+            if data == 'DIE':
+                logger.info('time to go out with a bang!')
+                return
+
+            if data == 'REIMPORT_STATES':
+                judge.NEED_REIMPORT_STATES = True
+
+            continue
+
         pool.apply_async(run_fight, (data, ), callback=res_callback, error_callback=err_callback)
 
 
@@ -25,7 +34,7 @@ def run(queue: mp.Queue):
 def run_fight(data, *args, **kwargs):
 
     # TODO: timeout from request
-    j = Judge(
+    j = judge.Judge(
         game=data['game'],
         lang=data['lang'],
         source=data['source'],

@@ -21,7 +21,7 @@ def _get_state(game: str):
 
 class Judge:
 
-    def __init__(self, game: str, lang: list, source: list, timeout: float, challenge_id: int, state_par):
+    def __init__(self, game: str, lang: list, source: list, timeout: float, challenge_id: int, state_par, local=False):
         self._source = source
         self._lang = lang
         self._cmd = [[], []]
@@ -29,6 +29,7 @@ class Judge:
         self._challenge_id = challenge_id
         self._state = _get_state(game)(state_par)
         self._log = []
+        self._local = local
 
     def _before_run(self):
         """
@@ -104,6 +105,10 @@ class Judge:
         }
 
     def _update_status(self):
+
+        if self._local:
+            return
+
         r = None
         try:
             r = requests.post(config.STATUS_ENDPOINT, json={

@@ -34,7 +34,7 @@ pipenv run s
 ```
 
 #### Advanced
-if you want to setup system as systemd unit run this commands
+if you want to setup system as systemd unit run this commands. Change user and group
 ```bash
 sudo ln -s FULL_PATH_TO_AIforcesJudge/config/ai_forces_judge.service /etc/systemd/system
 # don't forgot to change working dir in config

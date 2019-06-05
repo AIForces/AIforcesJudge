@@ -19,9 +19,10 @@ NEED_REIMPORT_STATES = False
 
 
 def _get_state(game: str):
-
+    global NEED_REIMPORT_STATES
     if NEED_REIMPORT_STATES:
         importlib.reload(states)
+        NEED_REIMPORT_STATES = False
 
     _module = getattr(states, f'{game}_state')
     return _module.State
@@ -162,7 +163,6 @@ class Judge:
                 continue
 
             player.stdin.write(self._state.get_input())
-            # Investigate shit. WTF newline?
             player.stdin.flush()
 
             # no data to read in player.stdout

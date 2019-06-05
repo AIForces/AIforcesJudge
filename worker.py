@@ -34,7 +34,7 @@ def run_fight(data, *args, **kwargs):
         state_par=data['state_par']
     )
     data = j.run()
-    requests.post(config.RESULT_ENDPOINT, json=data)
+    requests.post(config.SUBMISSION_RESULT_ENDPOINT, json=data)
     logger.success(f'{data["challenge_id"]} was sent successfully')
 
 

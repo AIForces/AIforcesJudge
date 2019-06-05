@@ -5,6 +5,7 @@ import os
 import shutil
 import sys
 
+import requests
 from flask.logging import default_handler
 from loguru import logger
 
@@ -30,6 +31,14 @@ def startup():
     if not os.path.exists('logs'):
         os.mkdir('logs')
 
+
+def update_judge_status(on=True):
+    """
+
+    :param on: True on start, False on shutdown
+    :return:
+    """
+    requests.post('127.0.0')
 
 def shutdown():
     logger.info('at exit')

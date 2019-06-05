@@ -4,8 +4,14 @@ from os.path import join
 
 IP = "127.0.0.1"
 PORT = 3001
-RESULT_ENDPOINT = "http://127.0.0.1:3000/judge/receive_data"
+RAILS_HOST = "http://127.0.0.1:3000"
 TRUSTED_IPS = ['127.0.0.1']
+
+JUDGE_STATUS_ENDPOINT = f"{RAILS_HOST}/judge/update_status"
+
+SUBMISSION_RESULT_ENDPOINT = f"{RAILS_HOST}/submission/receive_data"
+SUBMISSION_STATUS_ENDPOINT = f"{RAILS_HOST}/submission/update_status"
+
 
 DEBUG = True
 LOGGER_FORMAT = "[<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level>] " \

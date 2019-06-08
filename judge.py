@@ -124,6 +124,7 @@ class Judge:
         log = {}
         for stream in ['stdin', 'stdout', 'stderr']:
             log[stream] = [self.streams_log[stream][player] for player in Players]
+        return log
 
     def _compose_response(self):
         return {

@@ -2,7 +2,7 @@ from judge import Judge
 
 
 def test_tron(source, lang):
-    j = Judge("tron", lang, source, 0.5, 0, {"level": 3})
+    j = Judge("tron", lang, source, 0.5, 0, {"level": 3}, local=True)
     j.run()
 
 

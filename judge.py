@@ -225,6 +225,9 @@ class Judge:
             self.streams_log['stdout'][self._state.current_player].append(current_stdout)
             self.streams_log['stderr'][self._state.current_player].append(current_stderr)
 
+            for stream in ('stdin', 'stdout', 'stderr'):
+                self.streams_log[stream][BaseState.get_other_player(self._state.current_player)].append("[Waiting for opponent's move]")
+
             self._log.append(deepcopy(self._state.get_log()))
             self._state.change_player()
 

@@ -220,9 +220,9 @@ class Judge:
                 self._state.player_error(self._state.current_player, 'ME')
                 continue
 
-            self.streams_log['stdin'][player].append(current_stdin)
-            self.streams_log['stdout'][player].append(current_stdout)
-            self.streams_log['stderr'][player].append(current_stderr)
+            self.streams_log['stdin'][self._state.current_player].append(current_stdin)
+            self.streams_log['stdout'][self._state.current_player].append(current_stdout)
+            self.streams_log['stderr'][self._state.current_player].append(current_stderr)
 
             self._log.append(deepcopy(self._state.get_log()))
             self._state.change_player()
@@ -233,4 +233,4 @@ class Judge:
                 player.kill()
                 message = f'Process killed'
                 for stream in ('stdin', 'stdout', 'stderr'):
-                    self.streams_log[stream][player].append(message)
+                    self.streams_log[stream][self._state.current_player].append(message)

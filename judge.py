@@ -123,7 +123,9 @@ class Judge:
     def get_streams_log(self):
         log = {}
         for stream in ['stdin', 'stdout', 'stderr']:
-            log[stream] = [self.streams_log[stream][player] for player in Players]
+            log[stream] = {}
+            for player in Players:
+                log[stream][player.value] = self.streams_log[stream][player]
         return log
 
     def _compose_response(self):
@@ -213,6 +215,7 @@ class Judge:
                     logger.warning("Can't decode user's stderr... Skipping")
                     current_stderr = ''
             else:
+                logger.debug("no_stderr to read")
                 current_stderr = ''
 
             try:

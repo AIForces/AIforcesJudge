@@ -220,6 +220,9 @@ class Judge:
 
             try:
                 self._state.change_state(current_stdout)
+            except PresentationError:
+                self._state.player_error(self._state.current_player, 'PE')
+                continue
             except MoveError:
                 self._state.player_error(self._state.current_player, 'ME')
                 continue

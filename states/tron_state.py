@@ -31,8 +31,9 @@ class BoardCells(Enum):
     BLUE_TAIL_START_D = 24, 'W'
     BLOCK = 25, 'X'
     COIN = 26, 'C'
-    SPEED = 27, 'S'
-    INVISIBILITY = 28, 'I'
+    SPEED_UP = 27, 'U'
+    SPEED_DOWN = 28, 'D'
+    INVISIBILITY = 29, 'I'
 
 
 class Move:
@@ -49,12 +50,22 @@ class Moves(Enum):
     RIGHT = Move([0, 1], 'R')
 
 
+class PowerUps(str, Enum):
+    COIN = 'COIN'
+    SPEED_UP = 'SPEED_UP'
+    SPEED_DOWN = 'SPEED_DOWN'
+    INVISIBILITY = 'INVISIBILITY'
+
+
 class State(BaseState):
     @staticmethod
     def get_start_board(level):
         if level == 1:
             w, h = 15, 15
             ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
+            ans[0][1] = BoardCells.SPEED_UP
+            ans[1][0] = BoardCells.SPEED_UP
+            ans[1][1] = BoardCells.SPEED_UP
         elif level == 2:
             w, h = 20, 20
             ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
@@ -93,7 +104,6 @@ class State(BaseState):
                 for x, row in enumerate(blocks[i]):
                     for y, val in enumerate(row):
                         ans[x + pos[0]][y + pos[1]] = val
-            print(ans)
 
         elif level == 4:
             w, h = 50, 50
@@ -154,7 +164,18 @@ class State(BaseState):
         self.board = State.get_start_board(state_par["level"])
         self.size = [len(self.board), len(self.board[0])]
         self.number_of_move = 0
-        self.active_power_ups = []
+        self.power_ups = {
+            Players.RED: {
+                PowerUps.SPEED_DOWN: 0,
+                PowerUps.SPEED_UP: 0,
+                PowerUps.INVISIBILITY: 0,
+            },
+            Players.BLUE: {
+                PowerUps.SPEED_DOWN: 0,
+                PowerUps.SPEED_UP: 0,
+                PowerUps.INVISIBILITY: 0,
+            }
+        }
         self.points = {
             Players.RED: 1,
             Players.BLUE: 1
@@ -166,6 +187,10 @@ class State(BaseState):
         self.last_move = {
             Players.RED: Moves.START,
             Players.BLUE: Moves.START
+        }
+        self.speed = {
+            Players.RED: 0,
+            Players.BLUE: 0
         }
 
     def find_me(self, player):
@@ -184,7 +209,7 @@ class State(BaseState):
         return 0
 
     def check_empty(self, x):
-        if self.board[x[0]][x[1]] not in [BoardCells.EMPTY, BoardCells.COIN, BoardCells.SPEED, BoardCells.INVISIBILITY]:
+        if self.board[x[0]][x[1]] not in [BoardCells.EMPTY, BoardCells.COIN, BoardCells.SPEED_UP, BoardCells.SPEED_DOWN, BoardCells.INVISIBILITY]:
             return 1
         else:
             return 0
@@ -201,6 +226,11 @@ class State(BaseState):
                 if not self.check_bound(next_position):
                     if not self.check_empty(next_position):
                         self.alive[player] = True
+
+    def decrease_powerups(self):
+        for key, val in self.power_ups:
+            if val > 0:
+                self.power_ups[key] -= 1
 
     def change_state(self, output):
         try:
@@ -225,10 +255,23 @@ class State(BaseState):
         pointer_cell = BoardCells.RED_PLAYER if self.current_player == Players.RED else BoardCells.BLUE_PLAYER
         self.last_move[self.current_player] = move_enum
 
+        if self.board[next_position[0]][next_position[1]] == BoardCells.COIN:
+            self.points[self.current_player] += 5
+
+        if self.board[next_position[0]][next_position[1]] == BoardCells.INVISIBILITY:
+            self.power_ups[self.current_player][PowerUps.INVISIBILITY] = 5
+
+        if self.board[next_position[0]][next_position[1]] == BoardCells.SPEED_UP:
+            self.power_ups[self.current_player][PowerUps.SPEED_UP] = 5
+
+        if self.board[next_position[0]][next_position[1]] == BoardCells.SPEED_DOWN:
+            self.power_ups[self.current_player][PowerUps.SPEED_DOWN] = 5
+
         self.board[next_position[0]][next_position[1]] = pointer_cell
         self.board[my_position[0]][my_position[1]] = tail_cell
         self.points[self.current_player] += 1
 
+        self.decrease_powerups()
         self.update_alive()
         self.check_endgame()
 
@@ -252,10 +295,12 @@ class State(BaseState):
 
     def get_log(self):
         board_log = [[j.value[0] for j in i] for i in self.board]
-        points_log = [self.points[Players.RED], self.points[Players.BLUE]]
+        points_log = [self.points[player] for player in Players]
+        powerups_log = [self.power_ups[player] for player in Players]
         return {
             "board": board_log,
             "current_player": self.current_player.value,
+            "power_ups": powerups_log,
             "game_over": self.game_over,
             "points": points_log,
         }

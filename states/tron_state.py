@@ -188,7 +188,13 @@ class State(BaseState):
             Players.RED: Moves.START,
             Players.BLUE: Moves.START
         }
-        self.speed = {
+
+        self.predicted_runs = {
+            Players.RED: 1,
+            Players.BLUE: 1
+        }
+
+        self.current_runs = {
             Players.RED: 0,
             Players.BLUE: 0
         }
@@ -226,6 +232,8 @@ class State(BaseState):
                 if not self.check_bound(next_position):
                     if not self.check_empty(next_position):
                         self.alive[player] = True
+            if not self.alive[player]:
+                self.predicted_runs[player] = self.current_runs[player]
 
     def decrease_powerups(self):
         for player, data in self.power_ups.items():
@@ -234,6 +242,8 @@ class State(BaseState):
                     self.power_ups[player][pw] -= 1
 
     def change_state(self, output):
+        self.decrease_powerups()
+
         try:
             move_lit = output.split()[0]
         except IndexError:
@@ -272,7 +282,6 @@ class State(BaseState):
         self.board[my_position[0]][my_position[1]] = tail_cell
         self.points[self.current_player] += 1
 
-        self.decrease_powerups()
         self.update_alive()
         self.check_endgame()
 
@@ -306,8 +315,48 @@ class State(BaseState):
             "points": points_log,
         }
 
+    def recalc_runs(self):
+        speed = {}
+        for player in Players:
+            speed[player] = int(self.power_ups[player][PowerUps.SPEED_UP] > 0) - int(self.power_ups[player][PowerUps.SPEED_DOWN] > 0)
+        delta = speed[Players.RED] - speed[Players.BLUE]
+        mapper = {
+            -2: {
+                Players.RED: 1,
+                Players.BLUE: 4
+            },
+            -1: {
+                Players.RED: 1,
+                Players.BLUE: 2
+            },
+            0: {
+                Players.RED: 1,
+                Players.BLUE: 2
+            },
+            1: {
+                Players.RED: 2,
+                Players.BLUE: 1
+            },
+            2: {
+                Players.RED: 4,
+                Players.BLUE: 1
+            }
+        }
+        result = mapper[delta]
+        for player in Players:
+            if not self.alive[player]:
+                result[player] = 0
+
+        self.current_runs = {
+                Players.RED: 0,
+                Players.BLUE: 0
+            }
+        self.predicted_runs = result
+
     def change_player(self):
-        other_player = State.get_other_player(self.current_player)
-        if self.alive[other_player]:
-            self.current_player = other_player
+        self.current_runs[self.current_player] += 1
+        if self.current_runs[self.current_player] == self.predicted_runs[self.current_player]:
+            self.current_player = State.get_other_player(self.current_player)
+        if self.current_runs == self.predicted_runs:
+            self.recalc_runs()
         self.number_of_move += 1

@@ -228,9 +228,9 @@ class State(BaseState):
                         self.alive[player] = True
 
     def decrease_powerups(self):
-        for key, val in self.power_ups.items():
-            if val > 0:
-                self.power_ups[key] -= 1
+        for player, data in self.power_ups.items():
+            for pw, val in data.items():
+                self.power_ups[player][pw] -= 1
 
     def change_state(self, output):
         try:

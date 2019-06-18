@@ -354,6 +354,9 @@ class State(BaseState):
         self.predicted_runs = result
 
     def change_player(self):
+        print(self.current_player)
+        print(self.current_runs)
+        print(self.predicted_runs)
         self.current_runs[self.current_player] += 1
         if self.current_runs[self.current_player] == self.predicted_runs[self.current_player]:
             self.current_player = State.get_other_player(self.current_player)

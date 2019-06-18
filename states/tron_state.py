@@ -359,4 +359,6 @@ class State(BaseState):
             self.current_player = State.get_other_player(self.current_player)
         if self.current_runs == self.predicted_runs:
             self.recalc_runs()
+        if self.current_runs[self.current_player] == self.predicted_runs[self.current_player]:
+            self.current_player = State.get_other_player(self.current_player)
         self.number_of_move += 1

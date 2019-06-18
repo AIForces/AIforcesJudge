@@ -273,10 +273,10 @@ class State(BaseState):
             self.power_ups[self.current_player][PowerUps.INVISIBILITY] = 5
 
         if self.board[next_position[0]][next_position[1]] == BoardCells.SPEED_UP:
-            self.power_ups[self.current_player][PowerUps.SPEED_UP] = 5
+            self.power_ups[self.current_player][PowerUps.SPEED_UP] = 20
 
         if self.board[next_position[0]][next_position[1]] == BoardCells.SPEED_DOWN:
-            self.power_ups[self.current_player][PowerUps.SPEED_DOWN] = 5
+            self.power_ups[self.current_player][PowerUps.SPEED_DOWN] = 20
 
         self.board[next_position[0]][next_position[1]] = pointer_cell
         self.board[my_position[0]][my_position[1]] = tail_cell

@@ -331,7 +331,7 @@ class State(BaseState):
             },
             0: {
                 Players.RED: 1,
-                Players.BLUE: 2
+                Players.BLUE: 1
             },
             1: {
                 Players.RED: 2,

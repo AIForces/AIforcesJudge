@@ -233,7 +233,7 @@ class State(BaseState):
                     if not self.check_empty(next_position):
                         self.alive[player] = True
             if not self.alive[player]:
-                self.predicted_runs[player] = self.current_runs[player]
+                self.predicted_runs[player] = self.current_runs[player] + int(self.current_player == player)
 
     def decrease_powerups(self):
         for player, data in self.power_ups.items():

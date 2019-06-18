@@ -233,7 +233,7 @@ class State(BaseState):
                     if not self.check_empty(next_position):
                         self.alive[player] = True
             if not self.alive[player]:
-                self.predicted_runs[player] = self.current_runs[player] + 1
+                self.predicted_runs[player] = self.current_runs[player]
 
     def decrease_powerups(self):
         for player, data in self.power_ups.items():
@@ -359,11 +359,11 @@ class State(BaseState):
         print(self.current_player)
         print(self.current_runs)
         print(self.predicted_runs)
-        if self.current_runs[self.current_player] == self.predicted_runs[self.current_player]:
+        if self.current_runs[self.current_player] >= self.predicted_runs[self.current_player]:
             self.current_player = State.get_other_player(self.current_player)
         if self.current_runs == self.predicted_runs:
             self.recalc_runs()
-        if self.current_runs[self.current_player] == self.predicted_runs[self.current_player]:
+        if self.current_runs[self.current_player] >= self.predicted_runs[self.current_player]:
             self.current_player = State.get_other_player(self.current_player)
         self.number_of_move += 1
         print(self.current_player)

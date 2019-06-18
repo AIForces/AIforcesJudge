@@ -230,7 +230,8 @@ class State(BaseState):
     def decrease_powerups(self):
         for player, data in self.power_ups.items():
             for pw, val in data.items():
-                self.power_ups[player][pw] -= 1
+                if self.power_ups[player][pw] > 0:
+                    self.power_ups[player][pw] -= 1
 
     def change_state(self, output):
         try:

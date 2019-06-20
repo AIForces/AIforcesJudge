@@ -63,7 +63,7 @@ class State(BaseState):
         x = BoardCells.BLOCK
         e = BoardCells.EMPTY
         r = BoardCells.RED_PLAYER
-        d = BoardCells.BLUE_PLAYER
+        b = BoardCells.BLUE_PLAYER
         c = BoardCells.COIN
         u = BoardCells.SPEED_UP
         d = BoardCells.SPEED_DOWN
@@ -120,9 +120,10 @@ class State(BaseState):
                 [x, x, x, e, e, e, e, e, e, x, e, e, e, e, e, e, x, e, e],
                 [e, e, e, e, x, x, x, x, e, x, x, e, x, x, e, e, x, x, e],
                 [e, x, x, e, c, x, x, e, e, e, e, e, d, x, e, e, e, e, e],
-                [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
+                [b, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
             ]
             ans = ans + ans[:-1:-1]
+            ans[-1][0] = b
         else:
             raise NotImplementedError
 

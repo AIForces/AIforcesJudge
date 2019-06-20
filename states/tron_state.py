@@ -116,11 +116,11 @@ class State(BaseState):
                 [e, e, x, e, e, x, c, x, e, e, x, e, x, c, x, e, e, e, c],
                 [e, e, e, e, e, x, e, e, e, e, x, e, x, c, c, e, x, e, x],
                 [x, x, x, e, e, x, e, e, e, x, x, e, x, x, x, e, x, e, c],
-                [x, c, c, r, x, x, x, x, e, x, u, e, e, e, e, e, x, e, x],
+                [x, c, c, e, x, x, x, x, e, x, u, e, e, e, e, e, x, e, x],
                 [x, x, x, e, e, e, e, e, e, x, e, e, e, e, e, e, x, e, e],
                 [e, e, e, e, x, x, x, x, e, x, x, e, x, x, e, e, x, x, e],
                 [e, x, x, e, c, x, x, e, e, e, e, e, d, x, e, e, e, e, e],
-                [b, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
+                [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
             ]
             ans = ans + ans[-2::-1]
             ans[-1][0] = b

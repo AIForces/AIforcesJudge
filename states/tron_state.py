@@ -1,6 +1,7 @@
 from .base_state import *
 from exceptions import *
 from enum import Enum
+import copy
 
 
 class BoardCells(Enum):
@@ -122,7 +123,7 @@ class State(BaseState):
                 [e, x, x, e, c, x, x, e, e, e, e, e, d, x, e, e, e, e, e],
                 [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
             ]
-            ans = ans + ans[-2::-1]
+            ans = ans + ans[-2::-1].copy()
             ans[-1][0] = b
         else:
             raise NotImplementedError

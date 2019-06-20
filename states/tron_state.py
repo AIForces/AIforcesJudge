@@ -123,7 +123,7 @@ class State(BaseState):
                 [e, x, x, e, c, x, x, e, e, e, e, e, d, x, e, e, e, e, e],
                 [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
             ]
-            ans = ans + ans[-2::-1].copy()
+            ans = ans.copy() + ans[-2::-1].copy()
             ans[-1][0] = b
         else:
             raise NotImplementedError

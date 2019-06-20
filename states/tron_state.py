@@ -111,7 +111,7 @@ class State(BaseState):
             ans[-1][-1] = BoardCells.BLUE_PLAYER
 
         elif level == 3:
-            ans = [
+            half = [
                 [r, e, c, c, x, c, c, c, e, x, c, e, e, c, x, e, c, c, c],
                 [e, e, x, x, x, x, x, x, e, x, x, e, x, c, x, e, x, x, x],
                 [e, e, x, e, e, x, c, x, e, e, x, e, x, c, x, e, e, e, c],
@@ -123,7 +123,7 @@ class State(BaseState):
                 [e, x, x, e, c, x, x, e, e, e, e, e, d, x, e, e, e, e, e],
                 [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
             ]
-            ans = ans.copy() + ans[-2::-1].copy()
+            ans = half.copy() + half[-2::-1].copy()
             ans[-1][0] = b
         else:
             raise NotImplementedError

@@ -60,27 +60,29 @@ class PowerUps(str, Enum):
 class State(BaseState):
     @staticmethod
     def get_start_board(level):
+        x = BoardCells.BLOCK
+        e = BoardCells.EMPTY
+        r = BoardCells.RED_PLAYER
+        d = BoardCells.BLUE_PLAYER
+        c = BoardCells.COIN
+        u = BoardCells.SPEED_UP
+        d = BoardCells.SPEED_DOWN
+
         if level == 1:
-            w, h = 15, 15
-            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
-            ans[0][1] = BoardCells.SPEED_UP
-            ans[1][0] = BoardCells.SPEED_UP
-            ans[1][1] = BoardCells.SPEED_UP
+            w, h = 25, 25
+            ans = [[e for _ in range(h)] for _ in range(w)]
+            ans[0][0] = r
+            ans[-1][-1] =b
         elif level == 2:
             w, h = 20, 20
-            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
-        elif level == 3:
-            w, h = 20, 20
-            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
-            b = BoardCells.BLOCK
-            f = BoardCells.EMPTY
+            ans = [[e for _ in range(h)] for _ in range(w)]
             basic_comp = [
                 [
-                    [b, b],
-                    [b, f]
+                    [x, x],
+                    [x, e]
                 ],
                 [
-                    [b for _ in range(8)]
+                    [x for _ in range(8)]
                 ]
             ]
             blocks = []
@@ -104,13 +106,26 @@ class State(BaseState):
                 for x, row in enumerate(blocks[i]):
                     for y, val in enumerate(row):
                         ans[x + pos[0]][y + pos[1]] = val
+            ans[0][0] = BoardCells.RED_PLAYER
+            ans[-1][-1] = BoardCells.BLUE_PLAYER
 
-        elif level == 4:
-            w, h = 50, 50
-            ans = [[BoardCells.EMPTY for _ in range(h)] for _ in range(w)]
+        elif level == 3:
+            ans = [
+                [r, e, c, c, x, c, c, c, e, x, c, e, e, c, x, e, c, c, c],
+                [e, e, x, x, x, x, x, x, e, x, x, e, x, c, x, e, x, x, x],
+                [e, e, x, e, e, x, c, x, e, e, x, e, x, c, x, e, e, e, c],
+                [e, e, e, e, e, x, e, e, e, e, x, e, x, c, c, e, x, e, x],
+                [x, x, x, e, e, x, e, e, e, x, x, e, x, x, x, e, x, e, c],
+                [x, c, c, r, x, x, x, x, e, x, u, e, e, e, e, e, x, e, x],
+                [x, x, x, e, e, e, e, e, e, x, e, e, e, e, e, e, x, e, e],
+                [e, e, e, e, x, x, x, x, e, x, x, e, x, x, e, e, x, x, e],
+                [e, x, x, e, c, x, x, e, e, e, e, e, d, x, e, e, e, e, e],
+                [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
+            ]
+            ans = ans + ans[:-1:-1]
+        else:
+            raise NotImplementedError
 
-        ans[0][0] = BoardCells.RED_PLAYER
-        ans[-1][-1] = BoardCells.BLUE_PLAYER
         return ans
 
     @staticmethod
@@ -355,10 +370,6 @@ class State(BaseState):
 
     def change_player(self):
         self.current_runs[self.current_player] += 1
-
-        print(self.current_player)
-        print(self.current_runs)
-        print(self.predicted_runs)
         if self.current_runs[self.current_player] >= self.predicted_runs[self.current_player]:
             self.current_player = State.get_other_player(self.current_player)
         if self.current_runs == self.predicted_runs:
@@ -366,4 +377,3 @@ class State(BaseState):
         if self.current_runs[self.current_player] >= self.predicted_runs[self.current_player]:
             self.current_player = State.get_other_player(self.current_player)
         self.number_of_move += 1
-        print(self.current_player)

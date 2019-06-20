@@ -125,6 +125,27 @@ class State(BaseState):
             ]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
             ans[-1][0] = b
+        elif level == 4:
+            half = [
+                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, c, e, c, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, e, c, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, c, e, c, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, c, c, x, e, e, e, x, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, c, c, x, e, e, e, x, e, e, x, x, x, x, x],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, c, c, x, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, c, c, x, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, x, x, x, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, x, x, x, x, x, x, e, e, e, d, x, x, x, x, x, x, x, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, x, c, c, c, c, x, e, e, e, e, x, c, c, c, c, c, x, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, x, c, u, u, c, x, e, e, e, u, x, c, c, d, c, c, x, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, x, x, c, c, c, c, x, x, x, x, x, x, c, c, c, c, c, x, x, x, x, x, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, c, c, c, c, x, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, c, d, c, c, x, e],
+            ]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[-1][0] = b
         else:
             raise NotImplementedError
 

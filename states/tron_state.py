@@ -124,7 +124,7 @@ class State(BaseState):
                 [e, c, x, e, x, x, x, e, x, x, x, x, e, x, e, x, x, x, x]
             ]
             ans = half.copy() + half.copy()[-2::-1]
-            ans[-1][0] = b
+            ans[-1][0] = r
         else:
             raise NotImplementedError
 

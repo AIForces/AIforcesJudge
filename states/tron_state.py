@@ -164,7 +164,7 @@ class State(BaseState):
                 [e, e, x, x, x, e, e, x, x, x, e, e, e, e, e],
                 [e, x, x, x, x, e, e, c, x, c, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, e, e, d, e],
-                [e, e, e, e, e, e, d, e, r, e, e, e, e, e, e],
+                [e, e, e, e, e, e, d, e, e, e, e, e, e, e, e],
                 [e, e, c, x, c, e, e, e, c, x, c, e, e, e, e],
                 [e, e, x, x, x, e, e, c, u, x, u, c, e, e, e],
                 [e, e, c, x, c, e, e, x, x, x, x, x, e, e, e],

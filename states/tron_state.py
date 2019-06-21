@@ -73,7 +73,7 @@ class State(BaseState):
             w, h = 25, 25
             ans = [[e for _ in range(h)] for _ in range(w)]
             ans[0][0] = r
-            ans[-1][-1] =b
+            ans[-1][-1] = b
         elif level == 2:
             w, h = 20, 20
             ans = [[e for _ in range(h)] for _ in range(w)]
@@ -111,6 +111,68 @@ class State(BaseState):
             ans[-1][-1] = BoardCells.BLUE_PLAYER
 
         elif level == 3:
+            quoter = [
+                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, x, e, x, x, e],
+                [e, e, e, e, e, e, e, e, e, e, e, c, c, c, c],
+                [e, e, e, e, e, e, e, e, e, e, x, c, c, c, c],
+                [e, e, e, e, e, e, e, e, e, e, x, c, c, c, c],
+                [e, e, e, e, e, e, e, e, e, e, e, c, c, c, c],
+            ]
+            half = [row + row[-2::-1] for row in quoter]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[-1][-1] = b
+
+        elif level == 4:
+            quoter = [
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, d, x, x, x, e, x, x, x, d, e, e, e],
+                [e, e, e, e, e, e, x, e, x, e, e, e, e, e, e],
+                [e, e, e, e, e, u, x, e, x, u, e, e, e, e, e],
+                [e, e, x, x, x, x, x, e, x, x, x, x, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, d, e, e, e, e, e, e, e],
+                [e, e, x, x, x, x, e, e, x, x, x, x, e, e, e],
+                [e, e, x, e, u, x, e, e, x, u, e, x, e, e, e],
+                [e, e, x, e, u, x, e, e, x, e, e, e, e, e, e],
+                [e, e, x, e, u, x, e, e, x, x, e, e, e, d, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, d, e, e],
+                [e, e, e, e, e, e, e, e, e, e, d, e, e, e, u],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, u, u],
+            ]
+            half = [row + row[-2::-1] for row in quoter]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[-1][-1] = b
+
+        elif level == 5:
+            quoter = [
+                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, x, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, x, x, e, e, c, x, c, e, e, e, e, e],
+                [e, e, x, x, x, e, e, x, x, x, e, e, e, e, e],
+                [e, x, x, x, x, e, e, c, x, c, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, d, e],
+                [e, e, e, e, e, e, d, e, r, e, e, e, e, e, e],
+                [e, e, c, x, c, e, e, e, c, x, c, e, e, e, e],
+                [e, e, x, x, x, e, e, c, u, x, u, c, e, e, e],
+                [e, e, c, x, c, e, e, x, x, x, x, x, e, e, e],
+                [e, e, e, e, e, e, e, c, u, x, u, c, e, e, e],
+                [e, e, e, e, e, d, e, e, c, u, c, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+            ]
+            half = [row + row[-2::-1] for row in quoter]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[-1][-1] = b
+        elif level == 6:
+            pass
+        elif level == 7:
             half = [
                 [r, e, c, c, x, c, c, c, e, x, c, e, e, c, x, e, c, c, c],
                 [e, e, x, x, x, x, x, x, e, x, x, e, x, c, x, e, x, x, x],
@@ -125,7 +187,11 @@ class State(BaseState):
             ]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
             ans[-1][0] = b
-        elif level == 4:
+
+        elif level == 8:
+            pass
+
+        elif level == 9:
             half = [
                 [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, x, e, e, e, e, e, e, e],
@@ -146,6 +212,9 @@ class State(BaseState):
             ]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
             ans[-1][0] = b
+
+        elif level == 10:
+            pass
         else:
             raise NotImplementedError
 
@@ -305,7 +374,7 @@ class State(BaseState):
         self.last_move[self.current_player] = move_enum
 
         if self.board[next_position[0]][next_position[1]] == BoardCells.COIN:
-            self.points[self.current_player] += 5
+            self.points[self.current_player] += 2
 
         if self.board[next_position[0]][next_position[1]] == BoardCells.INVISIBILITY:
             self.power_ups[self.current_player][PowerUps.INVISIBILITY] = 5

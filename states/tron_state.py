@@ -112,7 +112,7 @@ class State(BaseState):
 
         elif level == 3:
             quoter = [
-                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
@@ -125,8 +125,9 @@ class State(BaseState):
                 [e, e, e, e, e, e, e, e, e, e, x, c, c, c, c],
                 [e, e, e, e, e, e, e, e, e, e, e, c, c, c, c],
             ]
-            half = [copy.deepcopy(row) + copy.deepcopy(row[-2::-1]) for row in quoter]
+            half = [row + row[-2::-1] for row in quoter]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[0][0] = r
             ans[-1][-1] = b
 
         elif level == 4:
@@ -149,11 +150,12 @@ class State(BaseState):
             ]
             half = [row + row[-2::-1] for row in quoter]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[0][0] = r
             ans[-1][-1] = b
 
         elif level == 5:
             quoter = [
-                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
                 [e, e, e, e, x, e, e, e, e, e, e, e, e, e, e],
                 [e, e, e, x, x, e, e, c, x, c, e, e, e, e, e],
                 [e, e, x, x, x, e, e, x, x, x, e, e, e, e, e],
@@ -169,7 +171,9 @@ class State(BaseState):
             ]
             half = [row + row[-2::-1] for row in quoter]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[0][0] = r
             ans[-1][-1] = b
+
         elif level == 6:
             pass
         elif level == 7:

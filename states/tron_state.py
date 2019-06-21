@@ -125,7 +125,7 @@ class State(BaseState):
                 [e, e, e, e, e, e, e, e, e, e, x, c, c, c, c],
                 [e, e, e, e, e, e, e, e, e, e, e, c, c, c, c],
             ]
-            half = [row + row[-2::-1] for row in quoter]
+            half = [copy.deepcopy(row) + copy.deepcopy(row[-2::-1]) for row in quoter]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
             ans[-1][-1] = b
 

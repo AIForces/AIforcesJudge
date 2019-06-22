@@ -179,7 +179,7 @@ class State(BaseState):
 
         elif level == 6:
             quoter = [
-                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
                 [e, d, e, e, e, x, e, e, e, e, e, e, e, e, e, e, e, e],
                 [e, e, e, e, x, c, e, e, x, c, e, e, e, x, e, e, e, e],
                 [e, e, e, x, c, e, e, e, e, x, c, e, e, e, e, e, e, e],

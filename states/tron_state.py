@@ -178,7 +178,30 @@ class State(BaseState):
             ans[-1][-1] = b
 
         elif level == 6:
-            pass
+            quoter = [
+                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, d, e, e, e, x, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, x, c, e, e, x, c, e, e, e, x, e, e, e, e],
+                [e, e, e, x, c, e, e, e, e, x, c, e, e, e, e, e, e, e],
+                [e, e, x, c, e, e, e, e, e, e, x, c, e, e, e, e, e, e],
+                [e, x, c, e, e, e, e, e, e, e, e, x, c, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, x, c, e, e, e, e],
+                [e, e, e, e, e, c, x, c, e, e, e, e, e, x, e, e, e, e],
+                [e, e, e, e, e, x, x, x, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, c, x, u, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, x, x, e, e, e, e, e, e, x, x, e, e, e, e, e, d, e],
+                [e, e, e, x, x, x, e, x, x, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, d, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+            ]
+            half = [row + row[-2::-1] for row in quoter]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[0][0] = r
+            ans[-1][-1] = b
+
         elif level == 7:
             half = [
                 [r, e, c, c, x, c, c, c, e, x, c, e, e, c, x, e, c, c, c],
@@ -196,7 +219,18 @@ class State(BaseState):
             ans[-1][0] = b
 
         elif level == 8:
-            pass
+            half = [
+                [e, c, e, e, e, e, e, e, e, e, x, e, e, e, d, e, e, e, e, e, e, e, e, e, e, e, x, c, e, e, e, e, e, e, e, e, e],
+                [e, x, e, e, e, e, e, e, e, e, x, e, x, e, e, e, e, e, e, x, e, e, e, x, e, e, e, e, x, x, x, x, x, x, e, e, e],
+                [e, c, e, x, x, x, e, e, e, e, x, e, x, x, e, e, e, e, x, x, x, e, e, e, x, e, e, e, x, c, c, c, c, c, e, e, e],
+                [e, x, e, u, x, c, e, e, e, e, x, e, x, x, x, e, e, e, x, c, x, e, e, e, x, e, x, u, x, c, c, c, c, c, e, e, e],
+                [e, c, e, x, x, x, e, e, e, e, x, e, x, x, x, x, e, e, e, e, e, e, e, x, e, e, e, e, x, x, x, x, x, x, e, e, e],
+                [e, x, e, e, e, e, e, e, e, e, u, e, x, x, x, c, e, e, e, e, e, e, e, x, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, x, x, c, e, e, e, x, x, x, e, d, e, e, e, x, e, e, e, e, e, e, e, e, e, e]
+            ]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[0][0] = r
+            ans[-1][-1] = b
 
         elif level == 9:
             half = [
@@ -229,7 +263,7 @@ class State(BaseState):
 
     @staticmethod
     def get_tail_type(player, last, cur):
-        tail_mapper = {
+        return {
             (Players.RED, Moves.START, Moves.UP): BoardCells.RED_TAIL_START_U,
             (Players.RED, Moves.START, Moves.DOWN): BoardCells.RED_TAIL_START_D,
             (Players.RED, Moves.START, Moves.LEFT): BoardCells.RED_TAIL_START_L,
@@ -262,8 +296,7 @@ class State(BaseState):
             (Players.BLUE, Moves.RIGHT, Moves.UP): BoardCells.BLUE_TAIL_CORNER_LU,
             (Players.BLUE, Moves.RIGHT, Moves.DOWN): BoardCells.BLUE_TAIL_CORNER_LD,
             (Players.BLUE, Moves.RIGHT, Moves.RIGHT): BoardCells.BLUE_TAIL_HORIZONTAL,
-        }
-        return tail_mapper[player, last, cur]
+        }[player, last, cur]
 
     @staticmethod
     def get_move_enum(lit):
@@ -434,7 +467,7 @@ class State(BaseState):
         for player in Players:
             speed[player] = int(self.power_ups[player][PowerUps.SPEED_UP] > 0) - int(self.power_ups[player][PowerUps.SPEED_DOWN] > 0)
         delta = speed[Players.RED] - speed[Players.BLUE]
-        mapper = {
+        result = {
             -2: {
                 Players.RED: 1,
                 Players.BLUE: 4
@@ -455,8 +488,7 @@ class State(BaseState):
                 Players.RED: 4,
                 Players.BLUE: 1
             }
-        }
-        result = mapper[delta]
+        }[delta]
         for player in Players:
             if not self.alive[player]:
                 result[player] = 0

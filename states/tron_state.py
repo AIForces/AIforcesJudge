@@ -294,7 +294,7 @@ class State(BaseState):
                 [e, e, e, e, e, e, e, e, e, u, u, u, u, u, u, u, u, u]
             ]
             ans = [row + row[::-1] for row in half]
-            ans[-1][0] = b
+            ans[0][-1] = b
         else:
             raise NotImplementedError
 

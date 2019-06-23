@@ -293,7 +293,7 @@ class State(BaseState):
                 [e, e, e, e, e, e, e, e, u, c, c, e, e, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, u, u, u, u, u, u, u, u, u]
             ]
-            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans = [row + row[::-1] for row in half]
             ans[-1][0] = b
         else:
             raise NotImplementedError

@@ -219,7 +219,7 @@ class State(BaseState):
             ans[-1][0] = b
 
         elif level == 8:
-            half = [[e] * 37] * 12 + [
+            half = copy.deepcopy([[x] * 37] * 12) + [
                 [e, c, e, e, e, e, e, e, e, e, x, e, e, e, d, e, e, e, e, e, e, e, e, e, e, e, x, c, e, e, e, e, e, e, e, e, e],
                 [e, x, e, e, e, e, e, e, e, e, x, e, x, e, e, e, e, e, e, x, e, e, e, x, e, e, e, e, x, x, x, x, x, x, e, e, e],
                 [e, c, e, x, x, x, e, e, e, e, x, e, x, x, e, e, e, e, x, x, x, e, e, e, x, e, e, e, x, c, c, c, c, c, e, e, e],
@@ -229,8 +229,8 @@ class State(BaseState):
                 [e, e, e, e, e, e, e, e, e, e, e, e, x, x, c, e, e, e, x, x, x, e, d, e, e, e, x, e, e, e, e, e, e, e, e, e, e]
             ]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
-            ans[0][0] = r
-            ans[-1][0] = b
+            ans[12][0] = r
+            ans[-11][0] = b
 
         elif level == 9:
             half = [

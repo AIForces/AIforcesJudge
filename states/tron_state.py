@@ -256,8 +256,8 @@ class State(BaseState):
 
         elif level == 10:
             half = [
-                [e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
-                [e, r, e, e, e, e, e, e, e, e, e, e, c, e, e, e, e, e, e],
+                [r, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, e, c, e, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, c, x, c, e, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, c, x, x, x, c, e, e, e, e],
                 [e, e, e, e, e, e, e, e, e, e, e, c, x, c, e, e, e, e, e],

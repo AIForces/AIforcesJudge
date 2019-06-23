@@ -255,7 +255,46 @@ class State(BaseState):
             ans[-1][0] = b
 
         elif level == 10:
-            pass
+            half = [
+                [r, e, e, e, e, e, e, e, e, e, e, u, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, u, c, u, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, u, c, c, c, u, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, u, c, u, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, u, c, u, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, u, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, e, e, u, u, u, u, u, u, u],
+                [e, e, e, e, e, e, e, e, e, e, u, c, c, c, c, c, c, c],
+                [e, e, e, e, e, e, e, e, e, u, c, c, c, c, c, c, c, c],
+                [e, e, e, e, e, e, e, e, u, c, c, c, c, c, c, c, c, c],
+                [e, e, e, e, e, e, e, e, u, c, c, e, e, c, c, c, c, c],
+                [e, e, e, e, e, e, e, u, c, c, e, e, u, e, c, c, c, c],
+                [e, e, e, e, e, e, e, u, c, c, e, e, e, e, c, c, u, u],
+                [e, e, e, e, e, e, u, c, c, c, c, e, e, c, c, c, c, u],
+                [e, e, e, e, e, e, u, c, c, c, c, c, c, c, c, c, c, c],
+                [e, e, e, e, e, e, u, c, c, c, c, c, c, c, c, c, c, c],
+                [e, e, e, e, e, e, u, c, c, c, c, c, c, c, c, c, c, c],
+                [e, e, e, e, e, u, c, c, c, c, c, c, c, c, c, c, c, c],
+                [e, e, e, e, e, u, c, c, c, c, c, c, c, e, e, e, e, e],
+                [e, e, e, e, e, u, c, c, c, c, c, e, e, e, e, e, e, e],
+                [e, e, e, e, u, c, c, c, c, c, e, e, c, e, e, e, e, c],
+                [e, e, e, e, u, c, c, c, c, e, e, c, e, c, e, e, c, e],
+                [e, e, e, e, u, c, c, c, c, e, e, e, e, e, e, e, e, e],
+                [e, e, e, u, c, c, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, u, c, c, c, c, e, e, c, e, e, e, c, c, e, e],
+                [e, e, e, u, c, u, c, c, e, c, e, c, e, c, e, e, c, e],
+                [e, e, e, u, c, u, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, u, c, u, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, u, c, u, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, u, u, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, u, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, u, c, c, e, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, u, c, c, e, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, u, c, c, e, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, u, c, c, e, e, e, e, e, e, e],
+                [e, e, e, e, e, e, e, e, e, u, u, u, u, u, u, u, u, u]
+            ]
+            ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
+            ans[-1][0] = b
         else:
             raise NotImplementedError
 

@@ -230,7 +230,7 @@ class State(BaseState):
             ]
             ans = copy.deepcopy(half) + copy.deepcopy(half)[-2::-1]
             ans[12][0] = r
-            ans[-11][0] = b
+            ans[-13][0] = b
 
         elif level == 9:
             half = [

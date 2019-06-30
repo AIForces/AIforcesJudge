@@ -140,7 +140,7 @@ class Judge:
 
         r = None
         try:
-            r = requests.post(config.SUBMISSION_STATUS_ENDPOINT, json={
+            r = requests.post(config.CHALLENGE_STATUS_ENDPOINT, json={
                 'challenge_id': self._challenge_id,
                 'stage': stage,
                 'step': self._state.number_of_move

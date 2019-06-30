@@ -9,8 +9,8 @@ TRUSTED_IPS = ['127.0.0.1']
 
 JUDGE_STATUS_ENDPOINT = f"{RAILS_HOST}/judge/update_status"
 
-SUBMISSION_RESULT_ENDPOINT = f"{RAILS_HOST}/submission/receive_data"
-SUBMISSION_STATUS_ENDPOINT = f"{RAILS_HOST}/submission/update_status"
+CHALLENGE_RESULT_ENDPOINT = f"{RAILS_HOST}/challenge/receive_data"
+CHALLENGE_STATUS_ENDPOINT = f"{RAILS_HOST}/challenge/update_status"
 
 
 DEBUG = True

@@ -123,7 +123,10 @@ class Judge:
     def get_streams_log(self):
         log = {}
         for stream in ['stdin', 'stdout', 'stderr']:
-            log[stream] = [self.streams_log[stream][player] for player in Players]
+            log[stream] = {}
+            for player in Players:
+                log[stream][player.value] = self.streams_log[stream][player]
+        return log
 
     def _compose_response(self):
         return {
@@ -212,10 +215,14 @@ class Judge:
                     logger.warning("Can't decode user's stderr... Skipping")
                     current_stderr = ''
             else:
+                logger.debug("no_stderr to read")
                 current_stderr = ''
 
             try:
                 self._state.change_state(current_stdout)
+            except PresentationError:
+                self._state.player_error(self._state.current_player, 'PE')
+                continue
             except MoveError:
                 self._state.player_error(self._state.current_player, 'ME')
                 continue
@@ -223,6 +230,9 @@ class Judge:
             self.streams_log['stdin'][self._state.current_player].append(current_stdin)
             self.streams_log['stdout'][self._state.current_player].append(current_stdout)
             self.streams_log['stderr'][self._state.current_player].append(current_stderr)
+
+            for stream in ('stdin', 'stdout', 'stderr'):
+                self.streams_log[stream][BaseState.get_other_player(self._state.current_player)].append("[Waiting for opponent's move]")
 
             self._log.append(deepcopy(self._state.get_log()))
             self._state.change_player()

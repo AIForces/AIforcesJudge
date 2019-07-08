@@ -55,6 +55,7 @@ class Judge:
             }
         }
 
+
     def _before_run(self):
         '''
         prepare all files, compile c++ and java, get command for running fighters
@@ -139,6 +140,9 @@ class Judge:
 
     def _update_status(self, stage):
         if self._local:
+            return
+
+        if not config.SEND_STATUS:
             return
 
         r = None

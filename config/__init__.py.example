@@ -12,6 +12,7 @@ JUDGE_STATUS_ENDPOINT = f"{RAILS_HOST}/judge/update_status"
 SUBMISSION_RESULT_ENDPOINT = f"{RAILS_HOST}/submission/receive_data"
 SUBMISSION_STATUS_ENDPOINT = f"{RAILS_HOST}/submission/update_status"
 
+SEND_STATUS = False
 
 DEBUG = True
 LOGGER_FORMAT = "[<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level>] " \

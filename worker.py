@@ -1,4 +1,5 @@
 import multiprocessing as mp
+import shutil
 import subprocess
 import requests
 import config
@@ -43,8 +44,11 @@ def run_fight(data, *args, **kwargs):
         state_par=data['state_par']
     )
     data = j.run()
-    requests.post(config.SUBMISSION_RESULT_ENDPOINT, json=data)
-    logger.success(f'{data["challenge_id"]} was sent successfully')
+    response = requests.post(config.CHALLENGE_RESULT_ENDPOINT, json=data)
+    if response.status_code == 200:
+        logger.success(f'{data["challenge_id"]} was sent successfully')
+    else:
+        logger.critical(f'{data["challenge_id"]} wasn\'t sent successfully')
 
 
 def err_callback(exc):

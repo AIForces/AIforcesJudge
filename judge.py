@@ -55,7 +55,6 @@ class Judge:
             }
         }
 
-
     def _before_run(self):
         '''
         prepare all files, compile c++ and java, get command for running fighters
@@ -114,8 +113,6 @@ class Judge:
             source_file = f'{file_name}/{file_name}.py'
             open(source_file, 'w').write(source)
             command = ['python3', f'{file_name}.py']
-            print('command is:')
-            print(command)
 
         elif 'java' in lang:
             # TODO: add java support
@@ -194,8 +191,6 @@ class Judge:
                 continue
 
             current_stdin = self._state.get_input()
-            print("cur_stdin")
-            print(current_stdin)
             player.stdin.write(current_stdin)
             player.stdin.flush()
 

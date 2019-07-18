@@ -113,7 +113,7 @@ class Judge:
         elif 'python' in lang:
             source_file = f'{file_name}/{file_name}.py'
             open(source_file, 'w').write(source)
-            command = [join(file_name, join(config.PYTHON_VENV_PATH, 'python3')), f'{file_name}.py']
+            command = [join(file_name, 'python3'), f'{file_name}.py']
             print('command is:')
             print(command)
 

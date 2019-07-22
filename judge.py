@@ -144,7 +144,7 @@ class Judge:
         if config.SEND_STATUS:
             r = None
             try:
-                r = requests.post(config.SUBMISSION_STATUS_ENDPOINT, json={
+                r = requests.post(config.CHALLENGE_STATUS_ENDPOINT, json={
                     'challenge_id': self._challenge_id,
                     'stage': stage,
                     'step': self._state.number_of_move
@@ -191,6 +191,13 @@ class Judge:
                 continue
 
             current_stdin = self._state.get_input()
+
+            pipes = select([], [player.stdin], [], self._timeout)[1]
+            if player.stdin not in pipes:
+                logger.debug('bad write')
+                self._state.player_error(self._state.current_player, 'TL')
+                continue
+
             player.stdin.write(current_stdin)
             player.stdin.flush()
 

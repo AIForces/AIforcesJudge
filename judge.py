@@ -112,7 +112,7 @@ class Judge:
         elif 'python' in lang:
             source_file = f'{file_name}/{file_name}.py'
             open(source_file, 'w').write(source)
-            command = [join(file_name, join(config.PYTHON_VENV_PATH, 'python3')), f'{file_name}.py']
+            command = ['python3', f'{file_name}.py']
 
         elif 'java' in lang:
             # TODO: add java support
@@ -141,18 +141,19 @@ class Judge:
         if self._local:
             return
 
-        r = None
-        try:
-            r = requests.post(config.CHALLENGE_STATUS_ENDPOINT, json={
-                'challenge_id': self._challenge_id,
-                'stage': stage,
-                'step': self._state.number_of_move
-            })
-        except ConnectionError:
-            logger.critical('server not available')
+        if config.SEND_STATUS:
+            r = None
+            try:
+                r = requests.post(config.SUBMISSION_STATUS_ENDPOINT, json={
+                    'challenge_id': self._challenge_id,
+                    'stage': stage,
+                    'step': self._state.number_of_move
+                })
+            except ConnectionError:
+                logger.critical('server not available')
 
-        if r.status_code != 200:
-            logger.critical('error while updating result')
+            if r.status_code != 200:
+                logger.critical('error while updating result')
 
     def run(self):
         try:

@@ -219,6 +219,10 @@ class Judge:
                 logger.debug("no_stderr to read")
                 current_stderr = ''
 
+            self.streams_log['stdin'][self._state.current_player].append(current_stdin)
+            self.streams_log['stdout'][self._state.current_player].append(current_stdout)
+            self.streams_log['stderr'][self._state.current_player].append(current_stderr)
+
             try:
                 self._state.change_state(current_stdout)
             except PresentationError:
@@ -227,10 +231,6 @@ class Judge:
             except MoveError:
                 self._state.player_error(self._state.current_player, 'ME')
                 continue
-
-            self.streams_log['stdin'][self._state.current_player].append(current_stdin)
-            self.streams_log['stdout'][self._state.current_player].append(current_stdout)
-            self.streams_log['stderr'][self._state.current_player].append(current_stderr)
 
             for stream in ('stdin', 'stdout', 'stderr'):
                 self.streams_log[stream][BaseState.get_other_player(self._state.current_player)].append("[Waiting for opponent's move]")

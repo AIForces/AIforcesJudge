@@ -46,7 +46,7 @@ def run_fight(data, *args, **kwargs):
     data = j.run()
     response = requests.post(config.CHALLENGE_RESULT_ENDPOINT, json=data)
     if response.status_code == 200:
-        logger.success(f'{data["challenge_id"]} was sent successfully')
+        logger.success(f'{data["challenge_id"]} was sent successfully pid:{os.getpid()}')
     else:
         logger.critical(f'{data["challenge_id"]} wasn\'t sent successfully')
 

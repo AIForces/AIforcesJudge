@@ -187,7 +187,7 @@ class Judge:
                 self._state.player_error(self._state.current_player, 'RE')
                 message = f'Process unexpectedly terminated.'
                 for stream in ('stdin', 'stdout', 'stderr'):
-                    self.streams_log[stream][player].append(message)
+                    self.streams_log[stream][self._state.current_player].append(message)
                 continue
 
             current_stdin = self._state.get_input()

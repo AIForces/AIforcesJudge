@@ -15,6 +15,7 @@ class Sandbox:
 
     @staticmethod
     def run(command, player_id):
-        player = 'first' if player_id == 0 else 'second'
-        return sp.Popen(SANDBOX["command"] + [f"--private={player}"] + command, stdin=sp.PIPE, stdout=sp.PIPE,
-                        stderr=sp.PIPE, universal_newlines=True)
+        return sp.Popen(command.split(), stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, universal_newlines=True)
+        # player = 'first' if player_id == 0 else 'second'
+        # return sp.Popen(SANDBOX["command"] + [f"--private={player}"] + [command], stdin=sp.PIPE, stdout=sp.PIPE,
+        #                 stderr=sp.PIPE, universal_newlines=True)

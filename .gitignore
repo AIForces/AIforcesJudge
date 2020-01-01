@@ -7,6 +7,6 @@ tmp
 config/*
 tests/JudgeTesting/tron_tests/*
 !tests/JudgeTesting/tron_tests/tron_tester.py
-!tests/JudgeTesting/tron_tests/player.cpp
-!tests/JudgeTesting/tron_tests/player.py
+!tests/player.cpp
+!tests/player.py
 !config/*.example
